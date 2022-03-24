@@ -1,32 +1,38 @@
 package gofiber
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	exec "stew/pkg/commands"
-	"stew/pkg/git"
+	"stew/pkg/commands"
+	"stew/pkg/templates"
 )
 
 func DownloadTemplate(appName string) error {
-	// get git url
-	// clone to specific folder = app name
-	currentDir, _ := os.Getwd()
-	// Set project folder.
+	gitUrl := templates.MicroservicesTemplates["go-fiber"]
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	// clone template to path
 	clonePath := filepath.Join(currentDir, appName)
-	git.Clone("go-fiber", clonePath)
-	os.Chdir(appName)
-	// run a go mod init inside with app name
-	options := []string{"mod", "init", appName}
-	err := exec.ExecCommand("go", options, true)
+	fmt.Println("Cloning Template for go-fiber at location : ", clonePath)
+	err = commands.Clone(gitUrl, clonePath)
 	if err != nil {
-		exec.ShowError(err.Error())
+		return err
 	}
-	// run a go mod tidy
-	options = []string{"mod", "tidy"}
-	err = exec.ExecCommand("go", options, true)
+	// do go mod init
+	fmt.Println("Initialising a go mod init")
+	err = commands.GoModInit(clonePath, appName)
 	if err != nil {
-		exec.ShowError(err.Error())
+		return err
 	}
-	os.Chdir(currentDir)
+	// do a go mod tidy
+	fmt.Println("Tidying up your go mod file")
+	err = commands.GoModTidy(clonePath)
+	if err != nil {
+		return err
+	}
 	return nil
 }

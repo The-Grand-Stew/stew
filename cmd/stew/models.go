@@ -10,6 +10,6 @@ var modelCmd = &cobra.Command{
 func runModelCmd(cmd *cobra.Command, args []string) error {
 	// read template name from config file
 	// clone or create template for model
-	// add files to appropriate foldes
+	// add files to appropriate folder
 	return nil
 }

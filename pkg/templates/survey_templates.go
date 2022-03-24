@@ -20,7 +20,17 @@ var (
 		icons.Error.Format = "red"
 		icons.Error.Text = "Note ->"
 	}
-
+	AppQuestion = []*survey.Question{
+		{
+			Name: "appName",
+			Prompt: &survey.Select{
+				Message:  "What do you want to call your app:",
+				Default:  "myapp",
+				PageSize: 2,
+			},
+			Validate: survey.Required,
+		},
+	}
 	LanguageQuestion = []*survey.Question{
 		{
 			Name: "language",

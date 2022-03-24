@@ -1,9 +1,0 @@
-package models
-
-type {{ . }} struct {
-
-}
-
-type {{ . }} interface{
-	Create()(interface{},error)
-}

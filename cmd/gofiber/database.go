@@ -1,34 +1,29 @@
 package gofiber
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	exec "stew/pkg/commands"
-	"stew/pkg/git"
+	"stew/pkg/commands"
+	"stew/pkg/templates"
 )
 
 func AddPostgres(appName string) error {
+	// get template for postgres
+	gitUrl := templates.MicroservicesTemplates["go-fiber-postgres"]
 	currentDir, _ := os.Getwd()
-	// Set project folder.
-	clonePath := filepath.Join(currentDir, appName)
-	// add gist to create db connection
-	path := filepath.Join(clonePath, "platform", "database")
-	git.Clone("go-postgres", path)
-	// pick up connection credentials from env variables
-	os.Chdir(appName)
-	options := []string{"mod", "tidy"}
-	err := exec.ExecCommand("go", options, true)
+	// clone gist to db folder
+	clonePath := filepath.Join(currentDir, appName, "platform", "database")
+	fmt.Println("Adding Database scripts at : ", clonePath)
+	err := commands.Clone(gitUrl, clonePath)
 	if err != nil {
-		exec.ShowError(err.Error())
+		return err
 	}
-	os.Chdir(currentDir)
-	return nil
-}
-
-func AddMySQL() error {
-	// create directory for platform/db
-	// add gist to create db connection
-	// pick up connection credentials from env variables
-
+	// run a go mod tidy
+	fmt.Println("Tidying up the go mod file")
+	err = commands.GoModTidy(filepath.Join(currentDir, appName))
+	if err != nil {
+		return err
+	}
 	return nil
 }
