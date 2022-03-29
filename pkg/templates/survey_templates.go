@@ -22,12 +22,8 @@ var (
 	}
 	AppQuestion = []*survey.Question{
 		{
-			Name: "appName",
-			Prompt: &survey.Select{
-				Message:  "What do you want to call your app:",
-				Default:  "myapp",
-				PageSize: 2,
-			},
+			Name:     "appNameå",
+			Prompt:   &survey.Input{Message: "What do you want to call your app?"},
 			Validate: survey.Required,
 		},
 	}
