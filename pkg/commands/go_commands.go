@@ -38,3 +38,13 @@ func GoImports(directoryPath string) error {
 	}
 	return nil
 }
+
+func GoFmt(directoryPath string) error {
+	os.Chdir(directoryPath)
+	options := []string{directoryPath}
+	err := ExecCommand("gofmt", options, true)
+	if err != nil {
+		return err
+	}
+	return nil
+}

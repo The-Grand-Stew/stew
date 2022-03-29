@@ -3,6 +3,7 @@ package stew
 import (
 	"fmt"
 	"stew/cmd/gofiber"
+	"stew/cmd/pyfastapi"
 	"stew/pkg/configs"
 	"stew/pkg/templates"
 	"strings"
@@ -24,9 +25,12 @@ func addDomains(template string, domains []string) error {
 	switch template {
 	case "go-fiber":
 		err = gofiber.AddModel(domains)
+	case "python-fastapi":
+		err = pyfastapi.AddModel(domains)
 	}
 	return err
 }
+
 func runDomainCommand(cmd *cobra.Command, args []string) error {
 	//load the config file
 	cfg, err := configs.LoadConfig()

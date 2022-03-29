@@ -3,6 +3,7 @@ package stew
 import (
 	"fmt"
 	"stew/cmd/gofiber"
+	"stew/cmd/pyfastapi"
 	"stew/pkg/configs"
 	"stew/pkg/templates"
 
@@ -12,7 +13,7 @@ import (
 
 // createCmd represents the `create` command.
 var createCmd = &cobra.Command{
-	Use:     "up",
+	Use:     "create",
 	Aliases: []string{"create"},
 	Short:   "Create a new project via interactive UI",
 	Long:    "\nCreate a new project via interactive UI.",
@@ -24,6 +25,8 @@ func addTemplate(microserviceTemplate string, appName string) error {
 	switch microserviceTemplate {
 	case "go-fiber":
 		err = gofiber.DownloadTemplate(appName)
+	case "python-fastapi":
+		err = pyfastapi.DownloadTemplate(appName)
 	}
 	return err
 }

@@ -16,11 +16,7 @@ func AddModel(domains []string) error {
 		addStruct(modelName)
 		addControllers(modelName)
 		addQueries(modelName)
-		err := addRoutes(modelName)
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
+		addRoutes(modelName)
 		addMain(modelName)
 	}
 
@@ -28,9 +24,9 @@ func AddModel(domains []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Print("Running goimports")
 	err = commands.GoImports(currentDir)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return nil
@@ -53,6 +49,7 @@ func addControllers(modelName string) error {
 	currentDir, _ := os.Getwd()
 	directoryPath := filepath.Join(currentDir, "app", "controllers")
 	// parse
+
 	err := templates.AddGoFiberModelTemplate(modelName, directoryPath, templates.GoFiberControllerTemplate)
 	if err != nil {
 		return err
