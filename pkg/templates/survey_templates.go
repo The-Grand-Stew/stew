@@ -22,8 +22,15 @@ var (
 	}
 	AppQuestion = []*survey.Question{
 		{
-			Name:     "appNameå",
+			Name:     "appName",
 			Prompt:   &survey.Input{Message: "What do you want to call your app?"},
+			Validate: survey.Required,
+		},
+	}
+	DomainQuestion = []*survey.Question{
+		{
+			Name:     "domain",
+			Prompt:   &survey.Input{Message: "What are your domains called? (Enter a comma separated list)"},
 			Validate: survey.Required,
 		},
 	}
@@ -88,7 +95,6 @@ var (
 			Validate: survey.Required,
 		},
 	}
-
 	AgreeCreation = []*survey.Question{
 		{
 			Name: "agree",

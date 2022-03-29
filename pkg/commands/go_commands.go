@@ -28,3 +28,13 @@ func GoModInit(directoryPath string, appName string) error {
 	os.Chdir(currentDir)
 	return nil
 }
+
+func GoImports(directoryPath string) error {
+	os.Chdir(directoryPath)
+	options := []string{"-w", directoryPath}
+	err := ExecCommand("goimports", options, true)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -7,9 +7,14 @@ import (
 	"text/template"
 )
 
+var funcMap = template.FuncMap{
+	"ToUpper": strings.ToUpper,
+	"ToLower": strings.ToLower,
+}
+
 func AddGoFiberModelTemplate(modelName string, directoryPath string, modelTemplate string) error {
 	path := filepath.Join(directoryPath, strings.ToLower(modelName)+".go")
-	t, err := template.New("modelTemplate").Parse(modelTemplate)
+	t, err := template.New("modelTemplate").Funcs(funcMap).Parse(modelTemplate)
 	if err != nil {
 		return err
 	}

@@ -1,32 +1,45 @@
 package gofiber
 
 import (
+	"fmt"
+	"html/template"
 	"os"
 	"path/filepath"
 	"stew/pkg/commands"
 	"stew/pkg/templates"
+	"strings"
 )
 
-const queryTemplate string = `package queries`
+func AddModel(domains []string) error {
+	currentDir, _ := os.Getwd()
+	for _, modelName := range domains {
+		addStruct(modelName)
+		addControllers(modelName)
+		addQueries(modelName)
+		err := addRoutes(modelName)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+		addMain(modelName)
+	}
 
-const controllerTemplate string = `package controllers`
-
-const routeTemplate string = `package routes`
-
-const mainTemplate string = `package main`
-
-func AddModel(modelName, appName string) error {
-	addStruct(modelName, appName)
-	addControllers(modelName, appName)
-	addQueries(modelName, appName)
-	addRoutes(modelName, appName)
+	err := commands.GoModTidy(currentDir)
+	if err != nil {
+		return err
+	}
+	fmt.Print("Running goimports")
+	err = commands.GoImports(currentDir)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func addStruct(modelName string, appName string) error {
+func addStruct(modelName string) error {
 	// Get path to add the model
 	currentDir, _ := os.Getwd()
-	directoryPath := filepath.Join(currentDir, appName, "app", "models")
+	directoryPath := filepath.Join(currentDir, "app", "models")
 	// parse
 	err := templates.AddGoFiberModelTemplate(modelName, directoryPath, templates.GoFiberModelTemplate)
 	if err != nil {
@@ -35,57 +48,62 @@ func addStruct(modelName string, appName string) error {
 	return nil
 }
 
-func addControllers(modelName, appName string) error {
+func addControllers(modelName string) error {
 	// Get path to add the model
 	currentDir, _ := os.Getwd()
-	directoryPath := filepath.Join(currentDir, appName, "app", "controllers")
+	directoryPath := filepath.Join(currentDir, "app", "controllers")
 	// parse
 	err := templates.AddGoFiberModelTemplate(modelName, directoryPath, templates.GoFiberControllerTemplate)
 	if err != nil {
 		return err
 	}
-	err = commands.GoModTidy(filepath.Join(currentDir, appName))
-	if err != nil {
-		return err
-	}
+
 	return nil
 
 }
 
-func addQueries(modelName, appName string) error {
+func addQueries(modelName string) error {
 	// Get path to add the model
 	currentDir, _ := os.Getwd()
-	directoryPath := filepath.Join(currentDir, appName, "app", "queries")
+	directoryPath := filepath.Join(currentDir, "app", "queries")
 	// parse
 	err := templates.AddGoFiberModelTemplate(modelName, directoryPath, templates.GoFiberQueryTemplate)
 	if err != nil {
 		return err
 	}
-	err = commands.GoModTidy(filepath.Join(currentDir, appName))
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 
-func addRoutes(modelName, appName string) error {
+func addRoutes(modelName string) error {
 	// Get path to add the model
 	currentDir, _ := os.Getwd()
-	directoryPath := filepath.Join(currentDir, appName, "app", "routes")
+	directoryPath := filepath.Join(currentDir, "app", "routes")
 	// parse
 	err := templates.AddGoFiberModelTemplate(modelName, directoryPath, templates.GoFiberRouteTemplate)
 	if err != nil {
 		return err
 	}
-	err = commands.GoModTidy(filepath.Join(currentDir, appName))
-	if err != nil {
-		return err
-	}
 	return nil
 
 }
 
-func addMain(modelName, appName string) error {
+func addMain(modelName string) error {
+	// Get path to add the model
+	currentDir, _ := os.Getwd()
+	path := filepath.Join(currentDir, "cmd", "main.go")
+	t, err := template.New("modelTemplate").Parse(templates.GoFiberMainTemplate)
+	if err != nil {
+		return err
+	}
+	// create output path to write the template
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	// vomit output to model file
+	t.Execute(f, strings.Title(modelName))
+	f.Close()
 	return nil
 
 }
