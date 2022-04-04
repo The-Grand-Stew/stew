@@ -5,11 +5,11 @@ import (
 	"os"
 	"path/filepath"
 	"stew/pkg/commands"
-	"stew/pkg/templates"
+	"stew/pkg/templates/repositories"
 )
 
 func DownloadTemplate(appName string) error {
-	gitUrl := templates.MicroservicesTemplates["python-fastapi"]
+	gitUrl := repositories.MicroservicesTemplates["python-fastapi"]
 	currentDir, err := os.Getwd()
 	if err != nil {
 		return err

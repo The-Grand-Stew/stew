@@ -3,9 +3,8 @@ package stew
 import (
 	"fmt"
 	"stew/cmd/gofiber"
-	"stew/cmd/pyfastapi"
 	"stew/pkg/configs"
-	"stew/pkg/templates"
+	"stew/pkg/templates/surveys"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -20,35 +19,38 @@ var domainCmd = &cobra.Command{
 	RunE:    runDomainCommand,
 }
 
-func addDomains(template string, domains []string) error {
+func addDomains(app *configs.AppDetails) error {
+	template := app.Language + "-" + app.Framework
 	var err error
 	switch template {
 	case "go-fiber":
-		err = gofiber.AddModel(domains)
-	case "python-fastapi":
-		err = pyfastapi.AddModel(domains)
+		err = gofiber.AddModel(app.AppName, app.Domains)
+		// case "python-fastapi":
+		// 	err = pyfastapi.AddModel(app.Domains)
 	}
 	return err
 }
 
 func runDomainCommand(cmd *cobra.Command, args []string) error {
 	//load the config file
-	cfg, err := configs.LoadConfig()
+	var app *configs.AppDetails
+	app, err := app.LoadAppConfig()
+
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("Detected Language and framework", cfg.Language, cfg.Framework)
+	fmt.Println("Detected Language and framework", app.Language, app.Framework)
 	// Ask for a database
 	var domains string
-	err = survey.Ask(templates.DomainQuestion, &domains, survey.WithIcons(templates.SurveyIconsConfig))
+	err = survey.Ask(surveys.DomainQuestion, &domains, survey.WithIcons(surveys.SurveyIconsConfig))
 	if err != nil {
 		fmt.Println(err)
 	}
-	cfg.Domains = strings.Split(domains, ",")
-	template := cfg.Language + "-" + cfg.Framework
-	addDomains(template, cfg.Domains)
-	cfg.UpdateConfig()
+	domainList := strings.Split(domains, ",")
+	app.Domains = append(app.Domains, domainList...)
+	addDomains(app)
+	app.UpdateAppConfig()
 	fmt.Println("Success!!")
 	return nil
 

@@ -5,12 +5,12 @@ import (
 	"os"
 	"path/filepath"
 	"stew/pkg/commands"
-	"stew/pkg/templates"
+	"stew/pkg/templates/repositories"
 )
 
 func AddPostgres() error {
 	// get template for postgres
-	gitUrl := templates.MicroservicesTemplates["go-fiber-postgres"]
+	gitUrl := repositories.MicroservicesTemplates["go-fiber-postgres"]
 	currentDir, _ := os.Getwd()
 	// clone gist to db folder
 	clonePath := filepath.Join(currentDir, "platform", "database")

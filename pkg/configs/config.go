@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-type StewConfig struct {
+type AppDetails struct {
 	AppName   string   `json:"appName"`
 	Language  string   `json:"language"`
 	Database  string   `json:"database"`
@@ -16,58 +16,60 @@ type StewConfig struct {
 	Domains   []string `json:"domains"`
 	AppPath   string   `json:"appPath"`
 }
+type StewConfig struct {
+	ProjectName string       `json:"projectName"`
+	Apps        []AppDetails `json:"appName"`
+}
 
-func (s *StewConfig) WriteToConfigFile() error {
-	currentDir, _ := os.Getwd()
-	appPath := filepath.Join(currentDir, s.AppName, ".stew")
-	f, err := os.Create(appPath)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	data, err := json.Marshal(s)
-	if err != nil {
-		return err
-	}
-	_, err = f.Write(data)
-	if err != nil {
-		return err
+//CreateConfig : Create the config file for the first time setup. ie for the first service
+func (s *StewConfig) CreateConfig() error {
+	for _, app := range s.Apps {
+		appPath := filepath.Join(app.AppName, ".stew")
+		f, err := os.Create(appPath)
+		if err != nil {
+			return err
+		}
+		data, err := json.Marshal(app)
+		if err != nil {
+			return err
+		}
+		_, err = f.Write(data)
+		if err != nil {
+			return err
+		}
+		f.Close()
 	}
 	return nil
-
 }
-func LoadConfig() (*StewConfig, error) {
-	config := StewConfig{}
+
+func (a *AppDetails) LoadAppConfig() (*AppDetails, error) {
 	//read from current dir
 	currentDir, _ := os.Getwd()
 	configPath := filepath.Join(currentDir, ".stew")
 	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
-		return nil, errors.New("stew config file doesn't exist. Might be a good idea to add manually")
+		return nil, errors.New("stew config file doesn't exist. Are you sure this is an app created by stew??")
 	}
 	configFile, err := os.Open(configPath)
 	if err != nil {
 		return nil, err
 	}
 	byteValue, _ := ioutil.ReadAll(configFile)
-	err = json.Unmarshal(byteValue, &config)
+	err = json.Unmarshal(byteValue, &a)
 	if err != nil {
 		return nil, err
 	}
-	return &config, nil
+	return a, nil
 }
 
-func (s *StewConfig) UpdateConfig() error {
+func (a *AppDetails) UpdateAppConfig() error {
 	currentDir, _ := os.Getwd()
 	configPath := filepath.Join(currentDir, ".stew")
-	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
-		return errors.New("stew config file doesn't exist. Might be a good idea to add manually")
-	}
 	f, err := os.Create(configPath)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-	data, err := json.Marshal(s)
+	data, err := json.Marshal(a)
 	if err != nil {
 		return err
 	}

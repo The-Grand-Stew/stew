@@ -3,7 +3,7 @@ package pyfastapi
 import (
 	"os"
 	"path/filepath"
-	"stew/pkg/templates"
+	"stew/pkg/templates/pyfastapi"
 )
 
 //TODO: ADD CRUD FUNCTIONALITIES FOR SCHEMA IF DB IS PRESENT
@@ -21,7 +21,7 @@ func addSchema(modelName string) error {
 	currentDir, _ := os.Getwd()
 	directoryPath := filepath.Join(currentDir, "app", "schemas")
 	// parse
-	err := templates.AddPythonFastapiTemplate(modelName, directoryPath, templates.PyFastAPISchema)
+	err := pyfastapi.AddPythonFastapiTemplate(modelName, directoryPath, pyfastapi.PyFastAPISchema)
 	if err != nil {
 		return err
 	}

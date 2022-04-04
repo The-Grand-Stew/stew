@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"stew/cmd/gofiber"
 	"stew/pkg/configs"
-	"stew/pkg/templates"
+	"stew/pkg/templates/surveys"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
@@ -29,20 +29,26 @@ var databaseCmd = &cobra.Command{
 
 func runDbCommand(cmd *cobra.Command, args []string) error {
 	//load the config file
-	cfg, err := configs.LoadConfig()
+	var app *configs.AppDetails
+	app, err := app.LoadAppConfig()
+	fmt.Println(app)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("Detected Language and framework", cfg.Language, cfg.Framework)
+	fmt.Println("Detected Language and framework", app.Language, app.Framework)
 	// Ask for a database
-	err = survey.Ask(templates.DatabaseQuestions, &cfg.Database, survey.WithIcons(templates.SurveyIconsConfig))
+	err = survey.Ask(surveys.DatabaseQuestions, &app.Database, survey.WithIcons(surveys.SurveyIconsConfig))
 	if err != nil {
 		fmt.Println(err)
 	}
-	template := cfg.Language + "-" + cfg.Framework + "-" + cfg.Database
-	addDatabase(template, cfg.AppName)
-	cfg.UpdateConfig()
+	//Add the database
+	template := app.Language + "-" + app.Framework + "-" + app.Database
+	err = addDatabase(template, app.AppName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	app.UpdateAppConfig()
 	fmt.Println("Success!!")
 	return nil
 

@@ -1,4 +1,4 @@
-package templates
+package repositories
 
 var MicroservicesTemplates = map[string]string{
 	"go-fiber":          "https://github.com/veda-p/go-fiber.git",

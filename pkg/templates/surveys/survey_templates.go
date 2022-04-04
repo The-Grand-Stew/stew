@@ -1,4 +1,4 @@
-package templates
+package surveys
 
 import (
 	"github.com/AlecAivazis/survey/v2"
@@ -20,13 +20,33 @@ var (
 		icons.Error.Format = "red"
 		icons.Error.Text = "Note ->"
 	}
-	AppQuestion = []*survey.Question{
+
+	ProjectQuestion = []*survey.Question{
 		{
-			Name:     "appName",
-			Prompt:   &survey.Input{Message: "What do you want to call your app?"},
+			Name:     "projectName",
+			Prompt:   &survey.Input{Message: "What do you want to call your project?"},
 			Validate: survey.Required,
 		},
 	}
+
+	AppQuestion = []*survey.Question{
+		{
+			Name:     "appName",
+			Prompt:   &survey.Input{Message: "What do you want to call your microservice?"},
+			Validate: survey.Required,
+		},
+	}
+
+	CreateMicroserviceAssurance = []*survey.Question{
+		{
+			Name: "agreeMicroservice",
+			Prompt: &survey.Confirm{
+				Message: "create a new microservice ? ",
+				Default: false,
+			},
+		},
+	}
+
 	DomainQuestion = []*survey.Question{
 		{
 			Name:     "domain",
@@ -34,6 +54,7 @@ var (
 			Validate: survey.Required,
 		},
 	}
+
 	LanguageQuestion = []*survey.Question{
 		{
 			Name: "language",

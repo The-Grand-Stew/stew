@@ -5,11 +5,11 @@ import (
 	"os"
 	"path/filepath"
 	"stew/pkg/commands"
-	"stew/pkg/templates"
+	"stew/pkg/templates/repositories"
 )
 
 func DownloadTemplate(appName string) error {
-	gitUrl := templates.MicroservicesTemplates["go-fiber"]
+	gitUrl := repositories.MicroservicesTemplates["go-fiber"]
 
 	currentDir, err := os.Getwd()
 	if err != nil {
