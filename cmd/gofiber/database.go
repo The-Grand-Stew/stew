@@ -14,13 +14,13 @@ func AddPostgres() error {
 	currentDir, _ := os.Getwd()
 	// clone gist to db folder
 	clonePath := filepath.Join(currentDir, "platform", "database")
-	fmt.Println("Adding Database scripts at : ", clonePath)
+	commands.ShowMessage("info", fmt.Sprintf("Adding Database scripts at : %s", clonePath), true, true)
 	err := commands.Clone(gitUrl, clonePath)
 	if err != nil {
 		return err
 	}
 	// run a go mod tidy
-	fmt.Println("Tidying up the go mod file")
+	commands.ShowMessage("info", "Tidying up the go mod file", true, true)
 	err = commands.GoModTidy(currentDir)
 	if err != nil {
 		return err

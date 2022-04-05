@@ -13,3 +13,11 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+dist/
+# macOS
+**/.DS_Store
+
+# IDE
+.vscode/
+.idea/

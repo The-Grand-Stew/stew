@@ -16,7 +16,7 @@ func DownloadTemplate(appName string) error {
 	}
 	// clone template to path
 	clonePath := filepath.Join(currentDir, appName)
-	fmt.Println("Cloning Template for python - fastapi at location : ", clonePath)
+	commands.ShowMessage("info", fmt.Sprintf("Cloning Template for python - fastapi at location :%s", clonePath), true, true)
 	err = commands.Clone(gitUrl, clonePath)
 	if err != nil {
 		return err

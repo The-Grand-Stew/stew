@@ -3,6 +3,7 @@ package stew
 import (
 	"fmt"
 	"stew/cmd/gofiber"
+	"stew/pkg/commands"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
 
@@ -31,25 +32,23 @@ func runDbCommand(cmd *cobra.Command, args []string) error {
 	//load the config file
 	var app *configs.AppDetails
 	app, err := app.LoadAppConfig()
-	fmt.Println(app)
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
-
-	fmt.Println("Detected Language and framework", app.Language, app.Framework)
+	commands.ShowMessage("info", fmt.Sprintf("Detected language %s and framework %s for your app", app.Language, app.Framework), true, true)
 	// Ask for a database
 	err = survey.Ask(surveys.DatabaseQuestions, &app.Database, survey.WithIcons(surveys.SurveyIconsConfig))
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	//Add the database
 	template := app.Language + "-" + app.Framework + "-" + app.Database
 	err = addDatabase(template, app.AppName)
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	app.UpdateAppConfig()
-	fmt.Println("Success!!")
+	commands.ShowMessage("success", "Success!", true, true)
 	return nil
 
 }

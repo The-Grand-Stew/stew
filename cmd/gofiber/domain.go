@@ -29,11 +29,6 @@ func AddModel(appName string, domains []string) error {
 	if err != nil {
 		return err
 	}
-	// err = commands.GoImports(currentDir)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return err
-	// }
 	return nil
 }
 

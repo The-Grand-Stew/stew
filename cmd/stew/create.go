@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"stew/cmd/gofiber"
 	"stew/cmd/pyfastapi"
+	"stew/pkg/commands"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
 
@@ -80,7 +81,7 @@ func createService() error {
 	// Ask for programming Language
 	err = survey.Ask(surveys.LanguageQuestion, &app.Language, survey.WithIcons(surveys.SurveyIconsConfig))
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	// Get Frameworks
 	switch app.Language {
@@ -92,7 +93,7 @@ func createService() error {
 	// get frameworks based on the languages
 	err = survey.Ask(template, &app.Framework, survey.WithIcons(surveys.SurveyIconsConfig))
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	// create a template
 	microserviceTemplate := app.Language + "-" + app.Framework
@@ -101,25 +102,24 @@ func createService() error {
 		return err
 	}
 	Config.Apps = append(Config.Apps, app)
-	fmt.Println(Config)
 	return nil
 }
 
 func runCreateCommand(cmd *cobra.Command, args []string) error {
 	err := createProject()
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	currentDir, _ := os.Getwd()
 	projectPath := filepath.Join(currentDir, Config.ProjectName)
 	os.Chdir(projectPath)
 	err = createService()
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	err = Config.CreateConfig()
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	return nil
 
@@ -133,11 +133,11 @@ func runCreateAppCommand(cmd *cobra.Command, args []string) error {
 	Config.ProjectName = filepath.Base(currentDir)
 	err = createService()
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	err = Config.CreateConfig()
 	if err != nil {
-		fmt.Println(err)
+		commands.ShowError(err.Error())
 	}
 	return nil
 
