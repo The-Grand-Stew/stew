@@ -21,3 +21,4 @@ dist/
 # IDE
 .vscode/
 .idea/
+Formula/*
