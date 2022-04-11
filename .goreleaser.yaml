@@ -32,7 +32,7 @@ brews:
   - # GitHub/GitLab repository to push the formula to
     tap:
       owner: veda-p
-      name: stew
+      name: homebrew-stew
       branch: main
 
 
