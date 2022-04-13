@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"stew/cmd/gofiber"
+	"stew/cmd/nodeexpress"
 	"stew/cmd/pyfastapi"
 	"stew/pkg/commands"
 	"stew/pkg/configs"
@@ -42,6 +43,8 @@ func addTemplate(microserviceTemplate string, appName string) error {
 		err = gofiber.DownloadTemplate(appName)
 	case "python-fastapi":
 		err = pyfastapi.DownloadTemplate(appName)
+	case "node-express":
+		err = nodeexpress.DownloadTemplate(appName)
 	}
 	return err
 }
