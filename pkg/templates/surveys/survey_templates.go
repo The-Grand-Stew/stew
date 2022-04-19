@@ -29,6 +29,14 @@ var (
 		},
 	}
 
+	FirstAppQuestion = []*survey.Question{
+		{
+			Name:     "appName",
+			Prompt:   &survey.Input{Message: "What do you want to call your first microservice?"},
+			Validate: survey.Required,
+		},
+	}
+
 	AppQuestion = []*survey.Question{
 		{
 			Name:     "appName",
@@ -50,7 +58,7 @@ var (
 	DomainQuestion = []*survey.Question{
 		{
 			Name:     "domain",
-			Prompt:   &survey.Input{Message: "What are your domains called? (Enter a comma separated list)"},
+			Prompt:   &survey.Input{Message: "What is your additional domain called?"},
 			Validate: survey.Required,
 		},
 	}
@@ -107,11 +115,9 @@ var (
 				Options: []string{
 					"postgres",
 					"mysql",
-					"redis",
-					"n/a",
 				},
 				Default:  "postgres",
-				PageSize: 4,
+				PageSize: 2,
 			},
 			Validate: survey.Required,
 		},
@@ -126,3 +132,17 @@ var (
 		},
 	}
 )
+
+func GenerateAppListTemplate(apps []string) []*survey.Question {
+	appList := []*survey.Question{
+		{
+			Name: "appList",
+			Prompt: &survey.Select{
+				Message: "Choose your service:",
+				Options: apps,
+			},
+			Validate: survey.Required,
+		},
+	}
+	return appList
+}

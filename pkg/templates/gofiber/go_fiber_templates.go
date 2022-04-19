@@ -111,13 +111,13 @@ import (
 )
 
 func health(c *fiber.Ctx)error{
-    return c.JSON("Health Check")
+    return c.JSON("Health Check from {{ .appName }}")
 
 }
 
 func main(){
    app := fiber.New() 
-   app.Get("/", health)
+   app.Get("/{{.appName}}/health", health)
    {{ .routes }}
    // Start server (with or without graceful shutdown).
 	if os.Getenv("STAGE_STATUS") == "prod" {

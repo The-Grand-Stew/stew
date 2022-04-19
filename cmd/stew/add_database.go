@@ -3,7 +3,6 @@ package stew
 import (
 	"fmt"
 	"stew/cmd/gofiber"
-	"stew/cmd/nodeexpress"
 	"stew/pkg/commands"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
@@ -17,33 +16,30 @@ func addDatabase(databaseTemplate string, appName string) error {
 	switch databaseTemplate {
 	case "go-fiber-postgres":
 		err = gofiber.AddPostgres()
-	case "node-express-postgres":
-		err = nodeexpress.AddDatabase(appName, databaseTemplate)
 	}
 	return err
 }
 
 var databaseCmd = &cobra.Command{
-	Use:     "add-db",
-	Aliases: []string{"db"},
+	Use:     "add-database",
+	Aliases: []string{"db", "database"},
 	Short:   "Add code to connect to a database",
 	Long:    "\nCreate a new db connection via interactive UI.",
 	RunE:    runDbCommand,
 }
 
 func runDbCommand(cmd *cobra.Command, args []string) error {
+	// chec if you are running from the project directory or app directory
+	var app configs.AppConfig
+	showApplist(app)
 	//load the config file
-	var app *configs.AppDetails
-	app, err := app.LoadAppConfig()
-	if err != nil {
-		commands.ShowError(err.Error())
-	}
+	err := app.LoadAppConfig()
+	showError(err)
+
 	commands.ShowMessage("info", fmt.Sprintf("Detected language %s and framework %s for your app", app.Language, app.Framework), true, true)
 	// Ask for a database
 	err = survey.Ask(surveys.DatabaseQuestions, &app.Database, survey.WithIcons(surveys.SurveyIconsConfig))
-	if err != nil {
-		commands.ShowError(err.Error())
-	}
+	showError(err)
 	//Add the database
 	template := app.Language + "-" + app.Framework + "-" + app.Database
 	err = addDatabase(template, app.AppName)
@@ -51,7 +47,7 @@ func runDbCommand(cmd *cobra.Command, args []string) error {
 		commands.ShowError(err.Error())
 	}
 	app.UpdateAppConfig()
-	commands.ShowMessage("success", "Success!", true, true)
+	commands.ShowMessage("success", fmt.Sprintf("Successfully bootstrapped code for your database %s!", app.Database), true, true)
 	return nil
 
 }

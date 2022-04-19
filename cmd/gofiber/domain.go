@@ -12,16 +12,26 @@ import (
 
 var domainSettings = templates.DomainTemplate{AppName: "", DirectoryPath: ""}
 
-func AddModel(appName string, domains []string) error {
+func AddModel(appName string, domain string) error {
 	domainSettings.AppName = appName
 	currentDir, _ := os.Getwd()
-	for _, modelName := range domains {
-		addStruct(modelName)
-		addControllers(modelName)
-		addQueries(modelName)
-		addRoutes(modelName)
+	err := addStruct(domain)
+	if err != nil {
+		return err
 	}
-	err := addMain(appName, domains)
+	err = addControllers(domain)
+	if err != nil {
+		return err
+	}
+	err = addQueries(domain)
+	if err != nil {
+		return err
+	}
+	err = addRoutes(domain)
+	if err != nil {
+		return err
+	}
+	err = addMain(appName, domain)
 	if err != nil {
 		return err
 	}
@@ -93,17 +103,10 @@ func addRoutes(modelName string) error {
 
 }
 
-func addMain(appName string, domains []string) error {
-	// type routeTemplate struct {
-	// 	appName string
-	// 	routes  string
-	// }
-
+func addMain(appName string, domain string) error {
 	// Get path to add the model
 	var routes []string
-	for _, domain := range domains {
-		routes = append(routes, fmt.Sprintf(`routes.%sRoutes(app)`, strings.Title(domain)))
-	}
+	routes = append(routes, fmt.Sprintf(`routes.%sRoutes(app)`, strings.Title(domain)))
 	routeTemplate := map[string]interface{}{"appName": strings.ToLower(appName), "routes": strings.Join(routes, "\n")}
 	currentDir, _ := os.Getwd()
 	path := filepath.Join(currentDir, "cmd", "main.go")
