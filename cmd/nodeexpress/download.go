@@ -22,9 +22,15 @@ func DownloadTemplate(appName string) error {
 	if err != nil {
 		return err
 	}
-	// do npm install
-	commands.ShowMessage("info", "Running an npm install", true, true)
-	err = commands.NpmInstall(clonePath)
+	// do go mod init
+	commands.ShowMessage("info", "Initialising the nodejs project", true, true)
+	err = commands.NodeInit(clonePath)
+	if err != nil {
+		return err
+	}
+	// do a go mod tidy
+	commands.ShowMessage("info", "Prettifying your code", true, true)
+	err = commands.NodeFormat(clonePath)
 	if err != nil {
 		return err
 	}
