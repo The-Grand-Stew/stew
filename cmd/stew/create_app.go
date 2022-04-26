@@ -67,6 +67,9 @@ func createService() error {
 	// 5: Select Framework
 	err = survey.Ask(template, &App.Framework, survey.WithIcons(surveys.SurveyIconsConfig))
 	showError(err)
+	// ask for app port
+	err = survey.Ask(surveys.PortQuestion, &App.AppPort, survey.WithIcons(surveys.SurveyIconsConfig))
+	showError(err)
 	// scaffold the code
 	err = addTemplate()
 	// add app config file

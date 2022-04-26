@@ -2,19 +2,25 @@ package commands
 
 import (
 	"fmt"
+	"os"
 	"stew/pkg/templates/repositories"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
 )
 
 func Clone(gitUrl, clonePath string) error {
-
+	token := os.Getenv("HOMEBREW_GITHUB_API_TOKEN")
 	// Clone project template.
 	_, err := git.PlainClone(
 		clonePath,
 		false,
 		&git.CloneOptions{
 			URL: gitUrl,
+			Auth: &http.BasicAuth{
+				Username: "abc123",
+				Password: token,
+			},
 		},
 	)
 	if err != nil {

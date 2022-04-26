@@ -29,13 +29,21 @@ func showError(err error) {
 	}
 }
 
+func runContainerBased() {
+	// create the first Microservice
+	err = createService()
+	showError(err)
+}
+
+func runServerlessBased() {
+
+}
+
 func runInitCommand(cmd *cobra.Command, args []string) error {
 	var err error
 	// ask for project name
 	err = survey.Ask(surveys.ProjectQuestion, &Config.ProjectName, survey.WithIcons(surveys.SurveyIconsConfig))
-	if err != nil {
-		return err
-	}
+	showError(err)
 	// TODO: Ask for project path in options
 	currentDir, _ := os.Getwd()
 	projectPath := filepath.Join(currentDir, Config.ProjectName)
@@ -43,16 +51,22 @@ func runInitCommand(cmd *cobra.Command, args []string) error {
 	showError(err)
 	// change directories to projects path
 	os.Chdir(projectPath)
+
+	commands.ShowMessage("success", fmt.Sprintf("Project created at path %s! Go ahead and create your first service", projectPath), false, false)
+	// ask for infra type
+	err = survey.Ask(surveys.CloudInfraTypeQuestion, &Config.InfrastructureType, survey.WithIcons(surveys.SurveyIconsConfig))
+	// change according to infra type
+	switch Config.InfrastructureType {
+	case "serverless":
+		runServerlessBased()
+	case "container-based":
+		runContainerBased()
+	}
 	// create a .stew config file in the project directory
 	err = Config.CreateConfig()
 	showError(err)
-	commands.ShowMessage("success", fmt.Sprintf("Project created at path %s! Go ahead and create your first service", projectPath), false, false)
-	// create the first Microservice
-	err = createService()
-	showError(err)
 	// update the config
 	return nil
-
 }
 
 func init() {

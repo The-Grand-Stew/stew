@@ -8,9 +8,17 @@ import (
 	"path/filepath"
 )
 
+type InfrastructureConfig struct {
+	CloudName          string `json:"cloudName"`          // eg aws/gcp/azure
+	CloudComponent     string `json:"cloudComponent"`     // fargate/cloudrun...
+	InfrastructureType string `json:"infrastructureType"` // container based or lambda
+	Region             string `json:"region"`
+}
+
 type AppConfig struct {
 	ConfigType string   `json:"configType"`
 	AppName    string   `json:"appName"`
+	AppPort    string   `json:"appPort"`
 	Language   string   `json:"language"`
 	Database   string   `json:"database"`
 	Framework  string   `json:"framework"`
@@ -18,6 +26,7 @@ type AppConfig struct {
 }
 
 type StewConfig struct {
+	InfrastructureConfig
 	ConfigType  string   `json:"configType"`
 	ProjectName string   `json:"projectName"`
 	Apps        []string `json:"apps"`

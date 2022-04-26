@@ -27,8 +27,6 @@ func addDomains(app configs.AppConfig, domain string) error {
 	switch template {
 	case "go-fiber":
 		err = gofiber.AddModel(app.AppName, domain)
-		// case "python-fastapi":
-		// 	err = pyfastapi.AddModel(app.Domains)
 	}
 	return err
 }

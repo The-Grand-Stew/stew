@@ -62,7 +62,13 @@ var (
 			Validate: survey.Required,
 		},
 	}
-
+	PortQuestion = []*survey.Question{
+		{
+			Name:     "port",
+			Prompt:   &survey.Input{Message: "What port will your service run on?"},
+			Validate: survey.Required,
+		},
+	}
 	LanguageQuestion = []*survey.Question{
 		{
 			Name: "language",
@@ -74,34 +80,6 @@ var (
 				},
 				Default:  "go",
 				PageSize: 2,
-			},
-			Validate: survey.Required,
-		},
-	}
-	GoQuestions = []*survey.Question{
-		{
-			Name: "goFramework",
-			Prompt: &survey.Select{
-				Message: "Choose a framework:",
-				Options: []string{
-					"fiber",
-				},
-				Default:  "fiber",
-				PageSize: 1,
-			},
-			Validate: survey.Required,
-		},
-	}
-	PythonQuestions = []*survey.Question{
-		{
-			Name: "pyFramework",
-			Prompt: &survey.Select{
-				Message: "Choose a framework:",
-				Options: []string{
-					"fastapi",
-				},
-				Default:  "fastapi",
-				PageSize: 1,
 			},
 			Validate: survey.Required,
 		},
@@ -122,6 +100,7 @@ var (
 			Validate: survey.Required,
 		},
 	}
+
 	AgreeCreation = []*survey.Question{
 		{
 			Name: "agree",
