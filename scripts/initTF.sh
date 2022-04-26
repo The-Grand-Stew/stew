@@ -29,17 +29,17 @@ if [ -z "$APP_NAME" ] || [ -z "$PROJECT" ] || [ -z "$VAR_REGION" ] || [ -z "$VAR
 fi
 
 echo 'terraform {\nbackend "s3" {}\n}' >backend.tf
-BUCKET_NAME="${SHORT_REGION}-${PROJECT}-${ENV}-terraform-state"
+BUCKET_NAME="${REGION}-${PROJECT}-${ENV}-terraform-state"
 echo "Initializing backend with..."
 echo "  Region: $REGION"
 echo "  Environment: $ENV"
-echo "  Full s3 bucket path: s3://${BUCKET_NAME}/${APP_NAME}.tfstate"
+echo "  Full s3 bucket path: s3://${BUCKET_NAME}/${PROJECT}.tfstate"
 
 #check if tf backend state bucket exists, if not create it
 bucketstatus=$(aws s3api head-bucket --bucket "${BUCKET_NAME}" 2>&1)
 if echo "${bucketstatus}" | grep 'Not Found'; then
     echo "bucket doesn't exist; attempting to create it"
-    aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION
+    # aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION
 
 elif echo "${bucketstatus}" | grep 'Forbidden'; then
     echo "Bucket exists but not owned; use credentials of the bucket owner and retry"
@@ -54,5 +54,5 @@ fi
 rm -rf .terraform
 terraform init \
     -backend-config="bucket=${SHORT_REGION}-${PROJECT}-${ENV}-terraform-state" \
-    -backend-config="key=${APP_NAME}.tfstate" \
+    -backend-config="key=${PROJECT}.tfstate" \
     -backend-config="region=${REGION}"

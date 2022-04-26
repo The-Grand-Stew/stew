@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"stew/cmd/gofiber"
 	"stew/cmd/pyfastapi"
+	"stew/cmd/nodeexpress"
 	"stew/pkg/commands"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
@@ -42,6 +42,8 @@ func addTemplate(microserviceTemplate string, appName string) error {
 		err = gofiber.DownloadTemplate(appName)
 	case "python-fastapi":
 		err = pyfastapi.DownloadTemplate(appName)
+	case "node-express":
+		err = nodeexpress.DownloadTemplate(appName)
 	}
 	return err
 }
@@ -89,6 +91,8 @@ func createService() error {
 		template = surveys.GoQuestions
 	case "python":
 		template = surveys.PythonQuestions
+	case "node":
+		template = surveys.NodeQuestions
 	}
 	// get frameworks based on the languages
 	err = survey.Ask(template, &app.Framework, survey.WithIcons(surveys.SurveyIconsConfig))
