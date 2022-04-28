@@ -37,17 +37,31 @@ func ExecCommand(command string, options []string, silentMode bool) error {
 	// Create a new scanner and run goroutine func with output, if not in silent mode.
 	if !silentMode {
 		scanner := bufio.NewScanner(cmdReader)
-
-		for scanner.Scan() {
-			fmt.Println(scanner.Text())
-		}
-
+		go func() {
+			for scanner.Scan() {
+				ShowMessage("", scanner.Text(), false, false)
+			}
+		}()
 	}
 
 	// Wait for executing command.
 	if errWait := cmd.Wait(); errWait != nil {
 		return ShowError(errWait.Error())
 	}
-
 	return nil
+}
+
+func ExecCommandWithOutput(command string, options []string) (string, error) {
+	cmd := exec.Command(command, options...)
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("errror", err)
+		return "", nil
+	}
+	outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
+	fmt.Printf("out:\n%s\nerr:\n%s\n", outStr, errStr)
+	return outStr, nil
 }

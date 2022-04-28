@@ -53,7 +53,7 @@ func runBaseSetup(infraPath string) {
 	component := Config.CloudName + "-" + Config.CloudComponent
 	switch component {
 	case "aws-ecs-fargate":
-		vars := map[string]string{"project": Config.ProjectName, "region": Config.Region, "environment": environment}
+		vars := map[string]string{"project": Config.ProjectName, "region": Config.Region, "environment": environment, "name": "base-setup"}
 		err = fargate.BaseSetup(infraPath, vars)
 		showError(err)
 	}

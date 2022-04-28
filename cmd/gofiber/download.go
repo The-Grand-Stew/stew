@@ -6,7 +6,7 @@ import (
 	"stew/pkg/commands"
 )
 
-func CreateMicroservice(appName string) error {
+func CreateMicroservice(appName, appPort string) error {
 	currentDir, _ := os.Getwd()
 	appPath := filepath.Join(currentDir, appName)
 	err := commands.DownloadTemplate("go-fiber", appPath)
@@ -26,7 +26,7 @@ func CreateMicroservice(appName string) error {
 		return err
 	}
 	os.Chdir(appPath)
-	err = AddModel(appName, appName)
+	err = AddModel(appName, appName, appPort)
 	os.Chdir(currentDir)
 	return nil
 }

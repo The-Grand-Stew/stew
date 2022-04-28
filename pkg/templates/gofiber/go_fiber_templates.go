@@ -115,7 +115,9 @@ func health(c *fiber.Ctx)error{
 
 }
 
+
 func main(){
+    os.Setenv("SERVER_PORT","{{ .appPort }}")
    app := fiber.New() 
    app.Get("/{{.appName}}/health", health)
    {{ .routes }}

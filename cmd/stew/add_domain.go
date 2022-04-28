@@ -26,7 +26,7 @@ func addDomains(app configs.AppConfig, domain string) error {
 	var err error
 	switch template {
 	case "go-fiber":
-		err = gofiber.AddModel(app.AppName, domain)
+		err = gofiber.AddModel(app.AppName, domain, app.AppPort)
 	}
 	return err
 }
