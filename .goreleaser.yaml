@@ -34,7 +34,7 @@ brews:
     custom_require: "lib/private"
     download_strategy: GitHubPrivateRepositoryReleaseDownloadStrategy
     # Default for github is "https://github.com/<repo_owner>/<repo_name>/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    url_template: "https://github.com/veda-p/stew/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/The-Grand-Stew/stew/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
     # Git author used to commit to the repository.
     # Defaults are shown.
