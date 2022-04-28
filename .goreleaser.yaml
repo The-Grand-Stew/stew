@@ -52,7 +52,7 @@ brews:
       - name: terraform
       - name: git
       - name: go
-      - name: buildah
+      - name: terragrunt
 
 archives:
   - # Replacements for GOOS and GOARCH in the archive name.
