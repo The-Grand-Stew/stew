@@ -29,6 +29,14 @@ var (
 		},
 	}
 
+	FirstAppQuestion = []*survey.Question{
+		{
+			Name:     "appName",
+			Prompt:   &survey.Input{Message: "What do you want to call your first microservice?"},
+			Validate: survey.Required,
+		},
+	}
+
 	AppQuestion = []*survey.Question{
 		{
 			Name:     "appName",
@@ -50,11 +58,17 @@ var (
 	DomainQuestion = []*survey.Question{
 		{
 			Name:     "domain",
-			Prompt:   &survey.Input{Message: "What are your domains called? (Enter a comma separated list)"},
+			Prompt:   &survey.Input{Message: "What is your additional domain called?"},
 			Validate: survey.Required,
 		},
 	}
-
+	PortQuestion = []*survey.Question{
+		{
+			Name:     "port",
+			Prompt:   &survey.Input{Message: "What port will your service run on?"},
+			Validate: survey.Required,
+		},
+	}
 	LanguageQuestion = []*survey.Question{
 		{
 			Name: "language",
@@ -67,34 +81,6 @@ var (
 				},
 				Default:  "go",
 				PageSize: 2,
-			},
-			Validate: survey.Required,
-		},
-	}
-	GoQuestions = []*survey.Question{
-		{
-			Name: "goFramework",
-			Prompt: &survey.Select{
-				Message: "Choose a framework:",
-				Options: []string{
-					"fiber",
-				},
-				Default:  "fiber",
-				PageSize: 1,
-			},
-			Validate: survey.Required,
-		},
-	}
-	PythonQuestions = []*survey.Question{
-		{
-			Name: "pyFramework",
-			Prompt: &survey.Select{
-				Message: "Choose a framework:",
-				Options: []string{
-					"fastapi",
-				},
-				Default:  "fastapi",
-				PageSize: 1,
 			},
 			Validate: survey.Required,
 		},
@@ -113,7 +99,6 @@ var (
 			Validate: survey.Required,
 		},
 	}
-
 	DatabaseQuestions = []*survey.Question{
 		{
 			Name: "database",
@@ -122,15 +107,14 @@ var (
 				Options: []string{
 					"postgres",
 					"mysql",
-					"redis",
-					"n/a",
 				},
 				Default:  "postgres",
-				PageSize: 4,
+				PageSize: 2,
 			},
 			Validate: survey.Required,
 		},
 	}
+
 	AgreeCreation = []*survey.Question{
 		{
 			Name: "agree",
@@ -141,3 +125,17 @@ var (
 		},
 	}
 )
+
+func GenerateAppListTemplate(apps []string) []*survey.Question {
+	appList := []*survey.Question{
+		{
+			Name: "appList",
+			Prompt: &survey.Select{
+				Message: "Choose your service:",
+				Options: apps,
+			},
+			Validate: survey.Required,
+		},
+	}
+	return appList
+}

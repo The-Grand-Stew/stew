@@ -3,67 +3,54 @@ package nodeexpress
 import (
 	"os"
 	"path/filepath"
+	"fmt"
 	templates "stew/pkg/templates/nodeexpress"
 )
 
 var domainSettings = templates.DomainTemplate{AppName: "", DirectoryPath: ""}
 
-func AddModel(appName string, domains []string) error {
+func AddModel(appName string, domain string) error {
 	domainSettings.AppName = appName
-	for _, modelName := range domains {
-		addControllers(modelName)
-		addRoutes(modelName)
-		addSchema(modelName)
-	}
-	return nil
-}
-
-
-func addControllers(modelName string) error {
-	// Get path to add the model
-	currentDir, _ := os.Getwd()
-	// parse
-	domainSettings.DirectoryPath = filepath.Join(currentDir, "app", "controllers",modelName+"s")
-	domainSettings.TemplateName = templates.NodeExpressControllerTemplate
-	domainSettings.DomainName = modelName
-
-	err := templates.AddNodeExpressapiTemplate(domainSettings)
+	err := addModelFile(domain,"route")
 	if err != nil {
+		fmt.Printf("Errored out %s",err)
+
 		return err
 	}
-
-	return nil
-
-}
-
-func addSchema(modelName string) error {
-	// Get path to add the model
-	currentDir, _ := os.Getwd()
-	domainSettings.DirectoryPath = filepath.Join(currentDir, "app","schemas",modelName+"s")
-	domainSettings.TemplateName = templates.NodeExpressModelTemplate
-	domainSettings.DomainName = modelName
-	//parse
-	err := templates.AddNodeExpressapiTemplate(domainSettings)
+	err = addModelFile(domain,"controller")
 	if err != nil {
+		fmt.Printf("Errored out %s",err)
+
 		return err
 	}
+	err = addModelFile(domain,"schema")
+	if err != nil {
+		fmt.Printf("Errored out %s",err)
 
+		return err
+	}
 	return nil
 }
 
-func addRoutes(modelName string) error {
-	// Get path to add the model
+func addModelFile(modelName string,fileType string) error{
 	currentDir, _ := os.Getwd()
-	domainSettings.DirectoryPath = filepath.Join(currentDir, "app", "routes",modelName+"s")
-	domainSettings.TemplateName = templates.NodeExpressRouteTemplate
+	domainSettings.DirectoryPath = filepath.Join(currentDir,fileType,modelName+"s")
+	err := os.MkdirAll(domainSettings.DirectoryPath, os.ModePerm)
+	templateName := templates.NodeExpressRouteTemplate
+	switch fileType{
+	case "route":
+		templateName = templates.NodeExpressRouteTemplate
+	case "controller":
+		templateName = templates.NodeExpressControllerTemplate
+	case "schema":
+		templateName = templates.NodeExpressModelTemplate
+	}
+	domainSettings.TemplateName =templateName
 	domainSettings.DomainName = modelName
 	// parse
-	err := templates.AddNodeExpressapiTemplate(domainSettings)
+	err = templates.AddNodeExpressapiTemplate(domainSettings)
 	if err != nil {
 		return err
 	}
 	return nil
-
 }
-
-

@@ -1,38 +1,32 @@
 package gofiber
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"stew/pkg/commands"
-	"stew/pkg/templates/repositories"
 )
 
-func DownloadTemplate(appName string) error {
-	gitUrl := repositories.MicroservicesTemplates["go-fiber"]
-
-	currentDir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	// clone template to path
-	clonePath := filepath.Join(currentDir, appName)
-	commands.ShowMessage("info", fmt.Sprintf("Cloning Template for go-fiber at location : %s", clonePath), true, true)
-	err = commands.Clone(gitUrl, clonePath)
+func CreateMicroservice(appName string) error {
+	currentDir, _ := os.Getwd()
+	appPath := filepath.Join(currentDir, appName)
+	err := commands.DownloadTemplate("go-fiber", appPath)
 	if err != nil {
 		return err
 	}
 	// do go mod init
 	commands.ShowMessage("info", "Initialising a go mod init", true, true)
-	err = commands.GoModInit(clonePath, appName)
+	err = commands.GoModInit(appPath, appName)
 	if err != nil {
 		return err
 	}
 	// do a go mod tidy
 	commands.ShowMessage("info", "Tidying up your go mod file", true, true)
-	err = commands.GoModTidy(clonePath)
+	err = commands.GoModTidy(appPath)
 	if err != nil {
 		return err
 	}
+	os.Chdir(appPath)
+	err = AddModel(appName, appName)
+	os.Chdir(currentDir)
 	return nil
 }

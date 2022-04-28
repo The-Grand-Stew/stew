@@ -1,43 +1,38 @@
 package commands
 
 import (
-"github.com/go-git/go-git/v5"
-"os"
-"strings"
-"fmt"
+	"fmt"
+	"os"
+	"stew/pkg/templates/repositories"
+
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
 )
 
 func Clone(gitUrl, clonePath string) error {
-	// // Clone project template.
-	// _, err := git.PlainClone(
-	// 	clonePath,
-	// 	false,
-	// 	&git.CloneOptions{
-	// 		URL: gitUrl,
-
-	// 	},
-	// )
-	// if err != nil {
-	// 	return err
-	// }
-	// return nil
-	// AASHRIT CHANGES, REMOVE AND UNCOMMENT ABOVE
-
-	username:= os.Getenv("GIT_USER");
-	password:= os.Getenv("GIT_PASS");
-	giturltrimmed:=strings.Replace(gitUrl,"https://","",1)
-	url := fmt.Sprintf("https://%s:%s@%s", username, password, giturltrimmed)
-	fmt.Println(url)
+	token := os.Getenv("HOMEBREW_GITHUB_API_TOKEN")
+	// Clone project template.
 	_, err := git.PlainClone(
 		clonePath,
 		false,
 		&git.CloneOptions{
-			URL: url,
-
+			URL: gitUrl,
+			Auth: &http.BasicAuth{
+				Username: "StewCook",
+				Password: token,
+			},
 		},
 	)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func DownloadTemplate(templateName, clonePath string) error {
+	gitUrl := repositories.MicroservicesTemplates[templateName]
+	// clone template to path
+	ShowMessage("info", fmt.Sprintf("Cloning Template for %s at location : %s", templateName, clonePath), true, false)
+	err := Clone(gitUrl, clonePath)
+	return err
 }

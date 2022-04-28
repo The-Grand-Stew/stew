@@ -8,7 +8,7 @@ import (
 	"stew/pkg/templates/repositories"
 )
 
-func DownloadTemplate(appName string) error {
+func CreateMicroservice(appName string) error {
 	gitUrl := repositories.MicroservicesTemplates["node-express"]
 
 	currentDir, err := os.Getwd()
@@ -24,7 +24,7 @@ func DownloadTemplate(appName string) error {
 		return err
 	}
 	// do npm install
-	commands.ShowMessage("info", "Initialising the nodejs project", true, true)
+	commands.ShowMessage("info", "Initializing the nodejs project", true, true)
 	err = commands.NodeInit(clonePath)
 	if err != nil {
 		commands.ShowMessage("error", fmt.Sprintf("Failed to initialize repo : %s", err), true, true)
