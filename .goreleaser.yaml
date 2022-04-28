@@ -28,7 +28,7 @@ builds:
 brews:
   - # GitHub/GitLab repository to push the formula to
     tap:
-      owner: veda-p
+      owner: The-Grand-Stew
       name: homebrew-stew
       branch: main
     custom_require: "lib/private"
@@ -39,7 +39,7 @@ brews:
     # Git author used to commit to the repository.
     # Defaults are shown.
     commit_author:
-      name: veda-p
+      name: The-Grand-Stew
       email: vedapatil@deloitte.nl
 
     folder: Formula
