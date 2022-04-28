@@ -141,6 +141,7 @@ func runCreateAppCommand(cmd *cobra.Command, args []string) error {
 	}
 	err = Config.CreateConfig()
 	if err != nil {
+		fmt.Printf("Failed to create config file %s",err)
 		commands.ShowError(err.Error())
 	}
 	return nil

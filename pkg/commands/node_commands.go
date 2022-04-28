@@ -4,29 +4,27 @@ import (
 	"os"
 )
 
-func NodeInit(directoryPath string) error {
+func ExecCommandWrapper(command string,options []string,directoryPath string) error {
 	currentDir, _ := os.Getwd()
 	os.Chdir(directoryPath)
-	options := []string{}
-	err := ExecCommand("npm install", options, true)
+	err := ExecCommand(command, options, true)
 	if err != nil {
 		return err
 	}
 	os.Chdir(currentDir)
 	return nil
+}
 
+func NodeInit(directoryPath string) error {
+	options := []string{"install"}
+	command:="npm"
+	return ExecCommandWrapper(command,options,directoryPath)
 }
 
 func NodeFormat(directoryPath string) error {
-	currentDir, _ := os.Getwd()
-	os.Chdir(directoryPath)
-	options := []string{}
-	err := ExecCommand("npm run prettify", options, true)
-	if err != nil {
-		return err
-	}
-	os.Chdir(currentDir)
-	return nil
+	options := []string{"run prettify"}
+	command :="npm"
+	return ExecCommandWrapper(command,options,directoryPath)
 }
 
 
