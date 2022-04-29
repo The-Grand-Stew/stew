@@ -137,3 +137,13 @@ router.delete("/{{ .DomainName | ToLower }}s/:id", async (req, res, next) => {
 module.exports = router;
 `
 
+const NodeExpressTestTemplate = `const request = require("supertest");
+const app = require("../../app");
+describe("Testing API call {{ .DomainName }}", () => {
+    test("{{ .Method }} {{ .DomainName }}s", (done) => {
+      request(app)
+        .{{ .Method }}("/{{ .DomainName }}s")
+        .expect("Content-Type", /json/)
+        .expect(200)
+    });
+  });`
