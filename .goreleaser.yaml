@@ -28,18 +28,18 @@ builds:
 brews:
   - # GitHub/GitLab repository to push the formula to
     tap:
-      owner: veda-p
+      owner: The-Grand-Stew
       name: homebrew-stew
       branch: main
     custom_require: "lib/private"
     download_strategy: GitHubPrivateRepositoryReleaseDownloadStrategy
     # Default for github is "https://github.com/<repo_owner>/<repo_name>/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    url_template: "https://github.com/veda-p/stew/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/The-Grand-Stew/stew/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
     # Git author used to commit to the repository.
     # Defaults are shown.
     commit_author:
-      name: veda-p
+      name: The-Grand-Stew
       email: vedapatil@deloitte.nl
 
     folder: Formula
@@ -52,7 +52,7 @@ brews:
       - name: terraform
       - name: git
       - name: go
-      - name: buildah
+      - name: terragrunt
 
 archives:
   - # Replacements for GOOS and GOARCH in the archive name.

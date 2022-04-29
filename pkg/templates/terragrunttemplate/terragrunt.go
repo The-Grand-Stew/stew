@@ -23,7 +23,7 @@ remote_state {
     config = {
         bucket          = "{{ .region }}-{{ .project}}-{{ .environment }}-terraform-state"
         region          = "eu-west-1"
-        key             = "${path_relative_to_include()}/terraform.tfstate"
+        key             = "${path_relative_to_include()}/{{ .name }}.tfstate"
         dynamodb_table  = "{{ .region }}-{{ .project}}-{{ .environment }}-terraform-lock"
     }
 }

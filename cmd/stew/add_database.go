@@ -3,6 +3,7 @@ package stew
 import (
 	"fmt"
 	"stew/cmd/gofiber"
+	"stew/cmd/nodeexpress"
 	"stew/pkg/commands"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
@@ -13,9 +14,12 @@ import (
 
 func addDatabase(databaseTemplate string, appName string) error {
 	var err error = nil
+	fmt.Printf(databaseTemplate)
 	switch databaseTemplate {
 	case "go-fiber-postgres":
 		err = gofiber.AddPostgres()
+	case "node-express-postgres":
+		err = nodeexpress.AddPostgres()
 	}
 	return err
 }

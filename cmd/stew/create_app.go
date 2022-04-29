@@ -33,9 +33,9 @@ func addTemplate() error {
 	microserviceTemplate := App.Language + "-" + App.Framework
 	switch microserviceTemplate {
 	case "go-fiber":
-		err = gofiber.CreateMicroservice(App.AppName)
+		err = gofiber.CreateMicroservice(App.AppName, App.AppPort)
 	case "node-express":
-		err = nodeexpress.CreateMicroservice(App.AppName)
+		err = nodeexpress.CreateMicroservice(App.AppName, App.AppPort)
 	}
 	
 	return err

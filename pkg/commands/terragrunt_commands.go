@@ -29,6 +29,21 @@ func TerragruntApply(skipApprove bool) error {
 
 }
 
+func TerragruntApplySpecific(target string) error {
+	options := []string{"apply", "-auto-approve", "-target=" + target}
+	err := ExecCommand("terragrunt", options, false)
+	fmt.Println(err)
+	return err
+
+}
+
+func TerragruntOutput(outputValue string) (string, error) {
+	options := []string{"output", "-raw", outputValue}
+	output, err := ExecCommandWithOutput("terragrunt", options)
+	fmt.Println("output", output)
+	return output, err
+}
+
 func GenerateVarsFile(vars map[string]string, varsPath string) error {
 	var varString []string
 	for key, value := range vars {
@@ -38,6 +53,7 @@ func GenerateVarsFile(vars map[string]string, varsPath string) error {
 	// write to file
 	f, err := os.Create(varsPath)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	defer f.Close()
@@ -72,7 +88,7 @@ remote_state {
     config = {
         bucket          = "{{ .region }}-{{ .project }}-{{ .environment }}-terraform-state"
         region          = "eu-west-1"
-        key             = "${path_relative_to_include()}/terraform.tfstate"
+        key             = "${path_relative_to_include()}/{{ .name }}.tfstate"
         dynamodb_table  = "{{ .region }}-{{ .project}}-{{ .environment }}-terraform-lock"
     }
 }

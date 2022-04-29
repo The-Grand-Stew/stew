@@ -12,7 +12,7 @@ import (
 
 var domainSettings = templates.DomainTemplate{AppName: "", DirectoryPath: ""}
 
-func AddModel(appName string, domain string) error {
+func AddModel(appName, domain, appPort string) error {
 	domainSettings.AppName = appName
 	currentDir, _ := os.Getwd()
 	err := addStruct(domain)
@@ -31,7 +31,7 @@ func AddModel(appName string, domain string) error {
 	if err != nil {
 		return err
 	}
-	err = addMain(appName, domain)
+	err = addMain(appName, domain, appPort)
 	if err != nil {
 		return err
 	}
@@ -103,11 +103,11 @@ func addRoutes(modelName string) error {
 
 }
 
-func addMain(appName string, domain string) error {
+func addMain(appName, domain, appPort string) error {
 	// Get path to add the model
 	var routes []string
 	routes = append(routes, fmt.Sprintf(`routes.%sRoutes(app)`, strings.Title(domain)))
-	routeTemplate := map[string]interface{}{"appName": strings.ToLower(appName), "routes": strings.Join(routes, "\n")}
+	routeTemplate := map[string]interface{}{"appName": strings.ToLower(appName), "routes": strings.Join(routes, "\n"), "appPort": appPort}
 	currentDir, _ := os.Getwd()
 	path := filepath.Join(currentDir, "cmd", "main.go")
 	t, err := template.New("modelTemplate").Parse(templates.GoFiberMainTemplate)

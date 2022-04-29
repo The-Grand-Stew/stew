@@ -8,7 +8,7 @@ import (
 	"stew/pkg/templates/repositories"
 )
 
-func CreateMicroservice(appName string) error {
+func CreateMicroservice(appName string, appPort string) error {
 	gitUrl := repositories.MicroservicesTemplates["node-express"]
 
 	currentDir, err := os.Getwd()
@@ -28,6 +28,11 @@ func CreateMicroservice(appName string) error {
 	err = commands.NodeInit(clonePath)
 	if err != nil {
 		commands.ShowMessage("error", fmt.Sprintf("Failed to initialize repo : %s", err), true, true)
+		return err
+	}
+	err = commands.SetAppPort(clonePath, appPort)
+	if err != nil {
+		commands.ShowMessage("error", fmt.Sprintf("Failed to edit appPort : %s", err), true, true)
 		return err
 	}
 	// run prettifier
