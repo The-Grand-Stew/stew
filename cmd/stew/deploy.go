@@ -9,7 +9,6 @@ import (
 	"stew/pkg/templates/surveys"
 	"strconv"
 	"time"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
