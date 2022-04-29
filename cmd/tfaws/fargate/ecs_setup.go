@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"stew/pkg/commands"
+	"strings"
 )
 
 func ECRSetup(infraPath string, tfvars map[string]string) (string, error) {
@@ -69,14 +70,40 @@ func FargateSetup(infraPath string, tfvars map[string]string) error {
 	commands.ShowMessage("info", "Deploying to Fargate..", true, true)
 	err = commands.TerragruntApply(true)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
+	invoke_url, err := commands.TerragruntOutput("invoke_url")
 	// get the ecr image registry id
 	os.Chdir(currentDir)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
+	commands.ShowMessage("success", "Your Service is Deployed! Here's your API Gateway invoke variable is: ", true, true)
+	commands.ShowMessage("success", invoke_url, true, true)
 	return nil
+}
+
+func Deploy(infraPath, imageName string, tfvars map[string]string) error {
+	// create ecr repo
+	repositoryUrl, err := ECRSetup(infraPath, tfvars)
+	if err != nil {
+		return err
+	}
+	commands.ShowMessage("info", "Repository URL: "+repositoryUrl, true, true)
+	// push to ecr
+	registry := strings.Split(repositoryUrl, "/")[0]
+	commands.ShowMessage("info", "Pushing Image to ECR", true, true)
+	err = commands.DockerLogin(tfvars["region"], registry, "aws")
+	if err != nil {
+		return err
+	}
+	image, err := commands.DockerTagAndPush(imageName, repositoryUrl)
+	if err != nil {
+		return err
+	}
+	// deploy to fg
+	tfvars["app_image"] = image
+	err = FargateSetup(infraPath, tfvars)
+	// showError(err)
+	return err
 }
