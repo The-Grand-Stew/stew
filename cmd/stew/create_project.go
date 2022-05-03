@@ -9,6 +9,7 @@ import (
 	"stew/pkg/templates/surveys"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,12 @@ var initCmd = &cobra.Command{
 
 func showError(err error) {
 	if err != nil {
+		if err == terminal.InterruptErr {
+			commands.ShowError("Interrupted!")
+			os.Exit(0)
+		}
 		commands.ShowError(err.Error())
+
 	}
 }
 
@@ -39,7 +45,7 @@ func runServerlessBased() {
 
 }
 
-func runInitCommand(cmd *cobra.Command, args []string) error {
+func createProject() error {
 	var err error
 	// ask for project name
 	err = survey.Ask(surveys.ProjectQuestion, &Config.ProjectName, survey.WithIcons(surveys.SurveyIconsConfig))
@@ -67,6 +73,11 @@ func runInitCommand(cmd *cobra.Command, args []string) error {
 	showError(err)
 	// update the config
 	return nil
+}
+
+func runInitCommand(cmd *cobra.Command, args []string) error {
+	return createProject()
+
 }
 
 func init() {

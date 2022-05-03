@@ -58,6 +58,12 @@ func colorizeLevel(level string) string {
 
 	// Switch color.
 	switch level {
+	case "doc":
+		color = yellow
+		icon = ""
+	case "command":
+		color = green
+		icon = ""
 	case "success":
 		color = green
 		icon = "[OK]"
@@ -72,5 +78,5 @@ func colorizeLevel(level string) string {
 	}
 
 	// Send common or colored caption.
-	return fmt.Sprintf("%s%s%s", color, icon, noColor)
+	return fmt.Sprintf("%s%s%s", color, icon, color)
 }

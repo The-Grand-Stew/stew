@@ -8,7 +8,6 @@ import (
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
 	"strconv"
-	"strings"
 	"time"
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
@@ -49,33 +48,19 @@ func build() string {
 func deploy(infraPath, imageName string) {
 	err = survey.Ask(surveys.EnvNameQuestion, &environment, survey.WithIcons(surveys.SurveyIconsConfig))
 	component := Config.CloudName + "-" + Config.CloudComponent
-	var repositoryUrl string
+	vars := map[string]string{
+		"project":     Config.ProjectName,
+		"region":      Config.Region,
+		"environment": environment,
+		"app_port":    app.AppPort,
+		"name":        app.AppName,
+		"path_part":   app.AppName,
+		"app_image":   "",
+	}
 	switch component {
 	case "aws-ecs-fargate":
-		vars := map[string]string{
-			"project":     Config.ProjectName,
-			"region":      Config.Region,
-			"environment": environment,
-			"app_port":    app.AppPort,
-			"name":        app.AppName,
-			"path_part":   app.AppName,
-			"app_image":   "",
-		}
-		// create ecr repo
-		repositoryUrl, err = fargate.ECRSetup(infraPath, vars)
+		err = fargate.Deploy(infraPath, imageName, vars)
 		showError(err)
-		commands.ShowMessage("info", "Repository Url: "+repositoryUrl, true, true)
-		// push to ecr
-		registry := strings.Split(repositoryUrl, "/")[0]
-		commands.ShowMessage("info", "Pushing Image to ECR", true, true)
-		err = commands.DockerLogin(Config.Region, registry, Config.CloudName)
-		showError(err)
-		image, err := commands.DockerTagAndPush(imageName, repositoryUrl)
-		showError(err)
-		// deploy to fg
-		vars["app_image"] = image
-		err = fargate.FargateSetup(infraPath, vars)
-		// showError(err)
 	}
 }
 

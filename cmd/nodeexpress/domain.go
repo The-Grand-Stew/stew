@@ -1,56 +1,56 @@
 package nodeexpress
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	"fmt"
-	"strings"
 	templates "stew/pkg/templates/nodeexpress"
+	"strings"
 )
 
 var domainSettings = templates.DomainTemplate{AppName: "", DirectoryPath: ""}
 
 func AddModel(appName string, domain string) error {
 	domainSettings.AppName = appName
-	err := addModelFile(domain,"route")
+	err := addModelFile(domain, "route")
 	if err != nil {
-		fmt.Printf("Errored out %s",err)
+		fmt.Printf("Errored out %s", err)
 
 		return err
 	}
-	err = addModelFile(domain,"controller")
+	err = addModelFile(domain, "controller")
 	if err != nil {
-		fmt.Printf("Errored out %s",err)
+		fmt.Printf("Errored out %s", err)
 
 		return err
 	}
-	err = addModelFile(domain,"schema")
+	err = addModelFile(domain, "schema")
 	if err != nil {
-		fmt.Printf("Errored out %s",err)
+		fmt.Printf("Errored out %s", err)
 
 		return err
 	}
-	
-	var httpMethods = []string{"post","put","get","delete"};
-	for _,method := range httpMethods{
-		err = addModelFile(domain+"."+method,"test")
+
+	var httpMethods = []string{"post", "put", "get", "delete"}
+	for _, method := range httpMethods {
+		err = addModelFile(domain+"."+method, "test")
 		if err != nil {
-			fmt.Printf("Errored out %s",err)
-	
+			fmt.Printf("Errored out %s", err)
+
 			return err
 		}
 	}
-	
+
 	return nil
 }
 
-func addModelFile(modelName string,fileType string) error{
+func addModelFile(modelName string, fileType string) error {
 	currentDir, _ := os.Getwd()
-	domainSettings.DirectoryPath = filepath.Join(currentDir,fileType,modelName+"s")
+	domainSettings.DirectoryPath = filepath.Join(currentDir, fileType, modelName+"s")
 	err := os.MkdirAll(domainSettings.DirectoryPath, os.ModePerm)
 	templateName := templates.NodeExpressRouteTemplate
 	var method string
-	switch fileType{
+	switch fileType {
 	case "route":
 		templateName = templates.NodeExpressRouteTemplate
 	case "controller":
@@ -59,12 +59,11 @@ func addModelFile(modelName string,fileType string) error{
 		templateName = templates.NodeExpressModelTemplate
 	case "test":
 		templateName = templates.NodeExpressTestTemplate
-		splitModelName := strings.Split(modelName,".")
+		splitModelName := strings.Split(modelName, ".")
 		modelName = splitModelName[0]
 		method = splitModelName[1]
-
 	}
-	domainSettings.TemplateName =templateName
+	domainSettings.TemplateName = templateName
 	domainSettings.DomainName = modelName
 	domainSettings.Method = method
 	// parse

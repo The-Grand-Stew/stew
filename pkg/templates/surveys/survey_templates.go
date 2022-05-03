@@ -14,7 +14,7 @@ import (
 var (
 	SurveyIconsConfig = func(icons *survey.IconSet) {
 		icons.Question.Format = "cyan"
-		icons.Question.Text = "Q:"
+		icons.Question.Text = ""
 		icons.Help.Format = "blue"
 		icons.Help.Text = "Help ->"
 		icons.Error.Format = "red"
