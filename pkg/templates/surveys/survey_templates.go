@@ -77,6 +77,7 @@ var (
 				Options: []string{
 					"go",
 					"python",
+					"node",
 				},
 				Default:  "go",
 				PageSize: 2,
@@ -84,7 +85,20 @@ var (
 			Validate: survey.Required,
 		},
 	}
-
+	NodeQuestions = []*survey.Question{
+		{
+			Name: "nodeFramework",
+			Prompt: &survey.Select{
+				Message: "Choose a framework:",
+				Options: []string{
+					"express",
+				},
+				Default:  "express",
+				PageSize: 1,
+			},
+			Validate: survey.Required,
+		},
+	}
 	DatabaseQuestions = []*survey.Question{
 		{
 			Name: "database",

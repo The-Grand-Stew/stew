@@ -9,7 +9,6 @@ import (
 	"stew/pkg/templates/surveys"
 	"strconv"
 	"time"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +16,7 @@ import (
 var deployCmd = &cobra.Command{
 	Use:     "deploy",
 	Aliases: []string{"deploy"},
-	Short:   "Add another domain to your existing microservice",
+	Short:   "Deploy your infrastructure to the cloud with the app you scaffolded",
 	Long:    "",
 	RunE:    runDeployCommand,
 }

@@ -2,6 +2,7 @@ package stew
 
 import (
 	"stew/cmd/gofiber"
+	"stew/cmd/nodeexpress"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
 
@@ -33,7 +34,10 @@ func addTemplate() error {
 	switch microserviceTemplate {
 	case "go-fiber":
 		err = gofiber.CreateMicroservice(App.AppName, App.AppPort)
+	case "node-express":
+		err = nodeexpress.CreateMicroservice(App.AppName, App.AppPort)
 	}
+	
 	return err
 }
 
@@ -63,6 +67,8 @@ func createService() error {
 	switch App.Language {
 	case "go":
 		template = surveys.GoQuestions
+	case "node":
+		template = surveys.NodeQuestions
 	}
 	// 5: Select Framework
 	err = survey.Ask(template, &App.Framework, survey.WithIcons(surveys.SurveyIconsConfig))

@@ -1,52 +1,60 @@
 package commands
 
-import "os"
+import (
+	"os"
+	"io/ioutil"
+	"strings"
+	"path/filepath"
+	"fmt"
+)
 
-// 1. clone the repo
-// 2. run npm install in the root directory
-
-// 3. to scaffold run npm run scaffold <appname> <path to app>
-
-// 4. To add models use run npm run addModel <modelName> <appname> <path to app>
-
-// 5. To add utils like postgres, mongo  run npm run addUtil <utilName> <appname> <path to app>
-
-func NpmInstall(directoryPath string) error {
+func ExecCommandWrapper(command string,options []string,directoryPath string) error {
 	currentDir, _ := os.Getwd()
 	os.Chdir(directoryPath)
+	err := ExecCommand(command, options, true)
+	if err != nil {
+		return err
+	}
+	os.Chdir(currentDir)
+	return nil
+}
+
+func NodeInit(directoryPath string) error {
 	options := []string{"install"}
-	err := ExecCommand("npm", options, true)
-	if err != nil {
-		return err
-	}
-	os.Chdir(currentDir)
-	return nil
-
+	command:="npm"
+	return ExecCommandWrapper(command,options,directoryPath)
 }
 
-func npmRun(directoryPath string, options []string) error {
+func NodeFormat(directoryPath string) error {
+	options := []string{"run prettify"}
+	command :="npm"
+	return ExecCommandWrapper(command,options,directoryPath)
+}
+
+func SetAppPort(directoryPath string, appPort string) error {
 	currentDir, _ := os.Getwd()
-	os.Chdir(directoryPath)
-	options = append(options, directoryPath)
-	runoptions := []string{"run"}
-	runoptions = append(runoptions, options...)
-	err := ExecCommand("npm", options, true)
-	if err != nil {
+	fmt.Printf("The Node js application port is set to %s", appPort)
+	clonePath := filepath.Join(directoryPath, "bin")
+	os.Chdir(clonePath)
+	input, err := ioutil.ReadFile("www")
+        if err != nil {
+		fmt.Printf("%s",err)
 		return err
 	}
+	lines := strings.Split(string(input), "\n")
+	for i, line := range lines {
+			if strings.Contains(line, "normalizePort(process.env.PORT || \"3000\")") {
+					lines[i] = "const port = normalizePort(process.env.PORT || "+"\""+ appPort+ "\");"
+			}
+	}
+	output := strings.Join(lines, "\n")
+	err = ioutil.WriteFile("www", []byte(output), 0644)
+	if err != nil {
+		os.Chdir(currentDir)
+		return err
+	}
+	
 	os.Chdir(currentDir)
-	return nil
+    return nil
 }
 
-func NpmRunModel(directoryPath, modelName string) error {
-	options := []string{"addModel", modelName}
-	err := npmRun(directoryPath, options)
-	return err
-
-}
-
-func NpmRunUtils(directoryPath, utilName string) error {
-	options := []string{"addUtil", utilName}
-	err := npmRun(directoryPath, options)
-	return err
-}

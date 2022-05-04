@@ -18,7 +18,7 @@ func Clone(gitUrl, clonePath string) error {
 		&git.CloneOptions{
 			URL: gitUrl,
 			Auth: &http.BasicAuth{
-				Username: "abc123",
+				Username: "StewCook",
 				Password: token,
 			},
 		},

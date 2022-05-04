@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"stew/cmd/gofiber"
+	"stew/cmd/nodeexpress"
 	"stew/pkg/commands"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
@@ -27,6 +28,8 @@ func addDomains(app configs.AppConfig, domain string) error {
 	switch template {
 	case "go-fiber":
 		err = gofiber.AddModel(app.AppName, domain, app.AppPort)
+	case "node-express":
+		err = nodeexpress.AddModel(app.AppName, domain)
 	}
 	return err
 }
