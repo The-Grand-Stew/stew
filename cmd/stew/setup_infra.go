@@ -18,8 +18,8 @@ import (
 var setupInfra = &cobra.Command{
 	Use:     "setup-infrastructure",
 	Aliases: []string{"setup-infra"},
-	Short:   "Scaffolds infrastructure creation scripts in terraform",
-	Long:    "",
+	Short:   "Create base infrastructure for services",
+	Long:    "Create basic infrastructure components like VPCs, VPN endpoints etc on the chosen cloud provider",
 	RunE:    setupInfraCommand,
 }
 

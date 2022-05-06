@@ -18,7 +18,7 @@ var createAppCmd = &cobra.Command{
 	Use:     "create-app",
 	Aliases: []string{"create-app", "create-service"},
 	Short:   "Create a new microservice for your domain in your project's directory",
-	Long:    "",
+	Long:    "Create a new microservice for your domain in your project's directory. Always run this from your project directory",
 	RunE:    runCreateAppCommand,
 }
 

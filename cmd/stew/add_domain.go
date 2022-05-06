@@ -18,7 +18,7 @@ var domainCmd = &cobra.Command{
 	Use:     "add-domain",
 	Aliases: []string{"domain"},
 	Short:   "Add another domain to your existing microservice",
-	Long:    "",
+	Long:    "Add another domain to your existing microservice. Run this command from you project directory or service's directory",
 	RunE:    runDomainCommand,
 }
 

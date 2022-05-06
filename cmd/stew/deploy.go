@@ -18,8 +18,8 @@ import (
 var deployCmd = &cobra.Command{
 	Use:     "deploy",
 	Aliases: []string{"deploy"},
-	Short:   "Deploy your infrastructure to the cloud with the app you scaffolded",
-	Long:    "",
+	Short:   "Deploy a single service to the cloud",
+	Long:    "Choose a service to deploy. Only run this command after the setup-infra command has been executed to setup the base infrastructure",
 	RunE:    runDeployCommand,
 }
 var port string

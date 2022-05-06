@@ -15,8 +15,8 @@ import (
 var playCmd = &cobra.Command{
 	Use:     "play",
 	Aliases: []string{"play"},
-	Short:   "Create a new project for your services",
-	Long:    "Creates a new workspace directory for your project. Run this command the very first time you set up a project consisting of various services. This command will also create the first microservice for you in your project.",
+	Short:   "CLI tour",
+	Long:    "Get an small tour of using the CLI to create and deploy services using stew",
 	RunE:    runPlayCommand,
 }
 
