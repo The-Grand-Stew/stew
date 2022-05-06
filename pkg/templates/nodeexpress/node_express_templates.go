@@ -12,7 +12,6 @@ const NodeExpressModelTemplate string = `const create{{ .DomainName }}Schema = {
   
   module.exports = { create{{ .DomainName }}Schema, update{{ .DomainName }}Schema };`
 
-
 const NodeExpressControllerTemplate string = `const { apiWrapper } = require("../../utils/https_connector");
 
 async function get{{ .DomainName }}(body, pathParams, queryParams) {
@@ -106,6 +105,11 @@ router.get("/{{ .DomainName | ToLower }}s", async (req, res, next) => {
   const { params, query, body } = req;
   const response = await get{{ .DomainName }}(body, params, query);
   res.json(response);
+},);
+
+router.get("/{{ .DomainName | ToLower }}/health", async (req, res, next) => {
+  const { params, query, body } = req;
+  res.send("Hello from {{ .DomainName | ToLower }}");
 },);
 
 router.post(

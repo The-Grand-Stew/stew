@@ -3,6 +3,7 @@ package stew
 import (
 	"stew/cmd/gofiber"
 	"stew/cmd/nodeexpress"
+	"stew/cmd/serverless"
 	"stew/pkg/configs"
 	"stew/pkg/templates/surveys"
 
@@ -28,6 +29,12 @@ func runCreateAppCommand(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
+func addServerlessTemplate() error {
+	var err error = nil
+	serverless.CreateService(Config.ProjectName, App.AppName, App.Runtime, Config.CloudName, Config.Region, App.Environment)
+	return err
+}
+
 func addTemplate() error {
 	var err error = nil
 	microserviceTemplate := App.Language + "-" + App.Framework
@@ -37,11 +44,11 @@ func addTemplate() error {
 	case "node-express":
 		err = nodeexpress.CreateMicroservice(App.AppName, App.AppPort)
 	}
-	
+
 	return err
 }
 
-func createService() error {
+func createBaseService(isContainerBased bool) error {
 	// needs to run from project directory
 	var template []*survey.Question
 
@@ -60,24 +67,55 @@ func createService() error {
 	Config.Apps = append(Config.Apps, App.AppName)
 	err = Config.CreateConfig()
 	showError(err)
-	// 4: Ask for programming Language
-	err = survey.Ask(surveys.LanguageQuestion, &App.Language, survey.WithIcons(surveys.SurveyIconsConfig))
-	showError(err)
-	// 5: Get Frameworks according to language
-	switch App.Language {
-	case "go":
-		template = surveys.GoQuestions
-	case "node":
-		template = surveys.NodeQuestions
+	if isContainerBased {
+		// 4: Ask for programming Language
+		err = survey.Ask(surveys.LanguageQuestion, &App.Language, survey.WithIcons(surveys.SurveyIconsConfig))
+		showError(err)
+
+		// 5: Get Frameworks according to language
+		switch App.Language {
+		case "go":
+			template = surveys.GoQuestions
+		case "node":
+			template = surveys.NodeQuestions
+		}
+
+		// 5: Select Framework
+		err = survey.Ask(template, &App.Framework, survey.WithIcons(surveys.SurveyIconsConfig))
+		showError(err)
 	}
-	// 5: Select Framework
-	err = survey.Ask(template, &App.Framework, survey.WithIcons(surveys.SurveyIconsConfig))
-	showError(err)
+
+	return nil
+}
+
+func createService() error {
+
+	createBaseService(true)
 	// ask for app port
 	err = survey.Ask(surveys.PortQuestion, &App.AppPort, survey.WithIcons(surveys.SurveyIconsConfig))
 	showError(err)
 	// scaffold the code
 	err = addTemplate()
+	// add app config file
+	err = App.CreateAppConfig()
+	showError(err)
+	return nil
+}
+
+func createServerlessService() error {
+	createBaseService(false)
+	// ask for region
+	err = survey.Ask(surveys.AWSRegion, &Config.Region, survey.WithIcons(surveys.SurveyIconsConfig))
+	showError(err)
+	// ask for cloud provider
+	err = survey.Ask(surveys.CloudProviderQuestion, &Config.CloudName, survey.WithIcons(surveys.SurveyIconsConfig))
+	showError(err)
+	err = survey.Ask(surveys.RuntimeQuestion, &App.Runtime, survey.WithIcons(surveys.SurveyIconsConfig))
+	showError(err)
+	err = survey.Ask(surveys.EnvNameQuestion, &App.Environment, survey.WithIcons(surveys.SurveyIconsConfig))
+	showError(err)
+	// scaffold the code
+	err = addServerlessTemplate()
 	// add app config file
 	err = App.CreateAppConfig()
 	showError(err)

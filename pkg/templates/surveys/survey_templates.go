@@ -80,7 +80,69 @@ var (
 					"node",
 				},
 				Default:  "go",
-				PageSize: 2,
+				PageSize: 3,
+			},
+			Validate: survey.Required,
+		},
+	}
+	// HttpIntegrationQuestion = []*survey.Question{
+	// 	{
+	// 		Name: "httpintegration",
+	// 		Prompt: &survey.Select{
+	// 			Message: "Does your lambda integrate with API gateway",
+	// 			Options: []string{
+	// 				"yes",
+	// 				"no",
+	// 			},
+	// 			Default:  "yes",
+	// 			PageSize: 2,
+	// 		},
+	// 		Validate: survey.Required,
+	// 	},
+	// }
+	LambdaNameQuestion = []*survey.Question{
+		{
+			Name:     "lambdaname",
+			Prompt:   &survey.Input{Message: "What is the name of your lambda function"},
+			Validate: survey.Required,
+		},
+	}
+	HttpMethodQuestion = []*survey.Question{
+		{
+			Name: "httpmethod",
+			Prompt: &survey.Select{
+				Message: "Which HTTP method does your lambda use",
+				Options: []string{
+					"get",
+					"post",
+					"put",
+					"delete",
+				},
+				Default:  "get",
+				PageSize: 4,
+			},
+			Validate: survey.Required,
+		},
+	}
+	HttpPathQuestion = []*survey.Question{
+		{
+			Name:     "apipath",
+			Prompt:   &survey.Input{Message: "What is the api path relative to /?"},
+			Validate: survey.Required,
+		},
+	}
+	RuntimeQuestion = []*survey.Question{
+		{
+			Name: "runtime",
+			Prompt: &survey.Select{
+				Message: "Choose a runtime:",
+				Options: []string{
+					"go1.x",
+					"nodejs12.x",
+					"nodejs14.x",
+				},
+				Default:  "go1.x",
+				PageSize: 3,
 			},
 			Validate: survey.Required,
 		},

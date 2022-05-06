@@ -53,6 +53,7 @@ brews:
       - name: git
       - name: go
       - name: terragrunt
+      - name: yq
 
 archives:
   - # Replacements for GOOS and GOARCH in the archive name.
@@ -81,4 +82,3 @@ changelog:
   filters:
     exclude:
       - "^*.md:"
-

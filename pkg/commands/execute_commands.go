@@ -57,11 +57,11 @@ func ExecCommandWithOutput(command string, options []string) (string, error) {
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err := cmd.Run()
+	fmt.Printf("Out:\n%s, err:\n%s", cmd.Stdout, cmd.Stderr)
 	if err != nil {
 		fmt.Println("errror", err)
 		return "", nil
 	}
-	outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
-	fmt.Printf("out:\n%s\nerr:\n%s\n", outStr, errStr)
+	outStr, _ := string(stdout.Bytes()), string(stderr.Bytes())
 	return outStr, nil
 }

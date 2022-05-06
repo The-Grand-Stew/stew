@@ -42,7 +42,9 @@ func runContainerBased() {
 }
 
 func runServerlessBased() {
-
+	// create a serverless project
+	err = createServerlessService()
+	showError(err)
 }
 
 func createProject() error {
@@ -61,6 +63,7 @@ func createProject() error {
 	commands.ShowMessage("success", fmt.Sprintf("Project created at path %s! Go ahead and create your first service", projectPath), false, false)
 	// ask for infra type
 	err = survey.Ask(surveys.CloudInfraTypeQuestion, &Config.InfrastructureType, survey.WithIcons(surveys.SurveyIconsConfig))
+	showError(err)
 	// change according to infra type
 	switch Config.InfrastructureType {
 	case "serverless":

@@ -16,13 +16,16 @@ type InfrastructureConfig struct {
 }
 
 type AppConfig struct {
-	ConfigType string   `json:"configType"`
-	AppName    string   `json:"appName"`
-	AppPort    string   `json:"appPort"`
-	Language   string   `json:"language"`
-	Database   string   `json:"database"`
-	Framework  string   `json:"framework"`
-	Domains    []string `json:"domains"`
+	ConfigType  string   `json:"configType"`
+	AppName     string   `json:"appName"`
+	AppPort     string   `json:"appPort"`
+	Language    string   `json:"language"`
+	Database    string   `json:"database"`
+	Framework   string   `json:"framework"`
+	Domains     []string `json:"domains"`
+	Lambdas     []string `json:"lambdas"`
+	Runtime     string   `json:"runtime"`
+	Environment string   `json:"environment"`
 }
 
 type StewConfig struct {
