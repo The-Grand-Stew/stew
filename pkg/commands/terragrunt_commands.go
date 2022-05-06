@@ -9,7 +9,7 @@ import (
 )
 
 func TerragruntInit() error {
-	err := ExecCommand("terragrunt", []string{"init"}, false)
+	err := ExecCommand("terragrunt", []string{"init", "-reconfigure"}, false)
 	return err
 }
 

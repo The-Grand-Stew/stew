@@ -7,7 +7,7 @@ import (
 var buildCmd = &cobra.Command{
 	Use:     "build",
 	Aliases: []string{"build"},
-	Short:   "",
+	Short:   "Build a container image",
 	Long:    "",
 	RunE:    runBuildCommand,
 }

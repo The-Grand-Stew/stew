@@ -1,6 +1,7 @@
 package stew
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"stew/cmd/tfaws/fargate"
@@ -9,6 +10,7 @@ import (
 	"stew/pkg/templates/surveys"
 	"strconv"
 	"time"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 )
@@ -16,8 +18,8 @@ import (
 var deployCmd = &cobra.Command{
 	Use:     "deploy",
 	Aliases: []string{"deploy"},
-	Short:   "Deploy your infrastructure to the cloud with the app you scaffolded",
-	Long:    "",
+	Short:   "Deploy a single service to the cloud",
+	Long:    "Choose a service to deploy. Only run this command after the setup-infra command has been executed to setup the base infrastructure",
 	RunE:    runDeployCommand,
 }
 var port string
@@ -35,10 +37,10 @@ func build() string {
 	os.Chdir(appName)
 	err := app.LoadAppConfig()
 	showError(err)
-	commands.ShowMessage("info", "Creating image..", true, true)
 	// generate tag
 	//TODO: HORRIBLE! DO SOMETHING ABOUT THIS
 	tag := strconv.FormatInt(time.Now().Unix(), 10)
+	commands.ShowMessage("info", fmt.Sprintf("Building image %s:%s", app.AppName, tag), true, true)
 	imageName, err := commands.DockerBuild(app.AppName, tag)
 	showError(err)
 	os.Chdir(currentDir)
@@ -60,11 +62,12 @@ func deploy(infraPath, imageName string) {
 	switch component {
 	case "aws-ecs-fargate":
 		err = fargate.Deploy(infraPath, imageName, vars)
+		fmt.Println(err)
 		showError(err)
 	}
 }
 
-func runDeployCommand(cmd *cobra.Command, args []string) error {
+func createDeployment() error {
 	//load the project config file
 	err = Config.LoadConfig()
 	showError(err)
@@ -74,7 +77,12 @@ func runDeployCommand(cmd *cobra.Command, args []string) error {
 	currentDir, _ := os.Getwd()
 	infraPath := filepath.Join(currentDir, "infrastructure")
 	deploy(infraPath, imageName)
+	commands.ShowMessage("success", "Infrastructure setup Done!", true, true)
 	return nil
+}
+
+func runDeployCommand(cmd *cobra.Command, args []string) error {
+	return createDeployment()
 }
 
 func init() {

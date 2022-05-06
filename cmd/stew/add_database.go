@@ -14,7 +14,6 @@ import (
 
 func addDatabase(databaseTemplate string, appName string) error {
 	var err error = nil
-	fmt.Printf(databaseTemplate)
 	switch databaseTemplate {
 	case "go-fiber-postgres":
 		err = gofiber.AddPostgres()
@@ -27,12 +26,12 @@ func addDatabase(databaseTemplate string, appName string) error {
 var databaseCmd = &cobra.Command{
 	Use:     "add-database",
 	Aliases: []string{"db", "database"},
-	Short:   "Add code to connect to a database",
-	Long:    "\nCreate a new db connection via interactive UI.",
+	Short:   "Add code for connecting to a database",
+	Long:    "\nThis will add boilerplate code to connect to a particular database inside the microservice. Currently supported databases include postgres,mongo.",
 	RunE:    runDbCommand,
 }
 
-func runDbCommand(cmd *cobra.Command, args []string) error {
+func createDatabase() error {
 	// chec if you are running from the project directory or app directory
 	var app configs.AppConfig
 	showApplist(app)
@@ -51,9 +50,13 @@ func runDbCommand(cmd *cobra.Command, args []string) error {
 		commands.ShowError(err.Error())
 	}
 	app.UpdateAppConfig()
-	commands.ShowMessage("success", fmt.Sprintf("Successfully bootstrapped code for your database %s!", app.Database), true, true)
+	commands.ShowMessage("success", fmt.Sprintf("Successfully bootstrapped code in service %s for database %s!", app.AppName, app.Database), true, true)
+	//TODO: decide if we want to move to the project directory again here
 	return nil
 
+}
+func runDbCommand(cmd *cobra.Command, args []string) error {
+	return createDatabase()
 }
 
 func init() {

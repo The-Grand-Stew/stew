@@ -1,7 +1,6 @@
 package nodeexpress
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	templates "stew/pkg/templates/nodeexpress"
@@ -14,19 +13,16 @@ func AddModel(appName string, domain string) error {
 	domainSettings.AppName = appName
 	err := addModelFile(domain, "route")
 	if err != nil {
-		fmt.Printf("Errored out %s", err)
 
 		return err
 	}
 	err = addModelFile(domain, "controller")
 	if err != nil {
-		fmt.Printf("Errored out %s", err)
 
 		return err
 	}
 	err = addModelFile(domain, "schema")
 	if err != nil {
-		fmt.Printf("Errored out %s", err)
 
 		return err
 	}
@@ -35,7 +31,6 @@ func AddModel(appName string, domain string) error {
 	for _, method := range httpMethods {
 		err = addModelFile(domain+"."+method, "test")
 		if err != nil {
-			fmt.Printf("Errored out %s", err)
 
 			return err
 		}
@@ -46,7 +41,7 @@ func AddModel(appName string, domain string) error {
 
 func addModelFile(modelName string, fileType string) error {
 	currentDir, _ := os.Getwd()
-	domainSettings.DirectoryPath = filepath.Join(currentDir, fileType, modelName+"s")
+	domainSettings.DirectoryPath = filepath.Join(currentDir, fileType, modelName)
 	err := os.MkdirAll(domainSettings.DirectoryPath, os.ModePerm)
 	templateName := templates.NodeExpressRouteTemplate
 	var method string

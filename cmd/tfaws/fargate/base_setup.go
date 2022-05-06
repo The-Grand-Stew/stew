@@ -12,15 +12,15 @@ func BaseSetup(infraPath string, tfvars map[string]string) error {
 	// clone the repo for setup
 	url := repositories.CloudInfraTemplates["aws-ecs-fargate"]
 	path := filepath.Join(infraPath, "aws-ecs-fargate")
+	commands.ShowMessage("info", fmt.Sprintf("Cloning initial terraform scripts at %s", path), true, false)
 	err := commands.Clone(url, path)
 	if err != nil {
 		return err
 	}
 	// check for creds
-	err = commands.CheckCredentials()
-	if err != nil {
-		return err
-	}
+	commands.ShowMessage("info", "Checking for AWS credentials", true, false)
+	commands.CheckCredentials()
+
 	currentDir, _ := os.Getwd()
 	baseSetupPath := filepath.Join(path, "base-setup")
 	// generate vars file
@@ -35,12 +35,17 @@ func BaseSetup(infraPath string, tfvars map[string]string) error {
 	commands.GenerateTerragruntFile(tfvars, baseSetupPath)
 	// run terragrunt init/plan/apply
 	os.Chdir(baseSetupPath)
+	err = commands.TerragruntInit()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 	commands.ShowMessage("info", "Applying terraform..", true, true)
 	err = commands.TerragruntApply(true)
-	fmt.Println(err)
 	if err != nil {
 		return err
 	}
 	os.Chdir(currentDir)
+
 	return nil
 }

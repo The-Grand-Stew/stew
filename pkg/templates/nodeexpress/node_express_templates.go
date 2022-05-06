@@ -101,7 +101,7 @@ const {
   update{{ .DomainName }}Schema,
 } = require("../../schemas/{{ .DomainName | ToLower }}/{{ .DomainName | ToLower }}Schema");
 /* domain level level routing */
-router.get("/{{ .DomainName | ToLower }}s", async (req, res, next) => {
+router.get("/{{ .DomainName | ToLower }}", async (req, res, next) => {
   const { params, query, body } = req;
   const response = await get{{ .DomainName }}(body, params, query);
   res.json(response);
@@ -113,7 +113,7 @@ router.get("/{{ .DomainName | ToLower }}/health", async (req, res, next) => {
 },);
 
 router.post(
-  "/{{ .DomainName | ToLower }}s",
+  "/{{ .DomainName | ToLower }}",
   validate({ body: create{{ .DomainName }}Schema }),
   async (req, res, next) => {
     const { params, query, body } = req;
@@ -123,7 +123,7 @@ router.post(
 );
 
 router.put(
-  "/{{ .DomainName | ToLower }}s/:id",
+  "/{{ .DomainName | ToLower }}/:id",
   validate({ body: update{{ .DomainName }}Schema }),
   async (req, res, next) => {
     const { params, query, body } = req;
@@ -132,11 +132,19 @@ router.put(
   },
 );
 
-router.delete("/{{ .DomainName | ToLower }}s/:id", async (req, res, next) => {
+router.delete("/{{ .DomainName | ToLower }}/:id", async (req, res, next) => {
   const { params, query, body } = req;
   const response = await delete{{ .DomainName }}(body, params, query);
   res.json(response);
 },);
+
+router.get("/{{ .DomainName | ToLower }}/health", async (req, res, next) => {
+
+  const { params, query, body } = req;
+  
+  res.send("Hello from {{ .DomainName | ToLower }}");
+  
+  },);
 
 module.exports = router;
 `
@@ -144,9 +152,9 @@ module.exports = router;
 const NodeExpressTestTemplate = `const request = require("supertest");
 const app = require("../../app");
 describe("Testing API call {{ .DomainName }}", () => {
-    test("{{ .Method }} {{ .DomainName }}s", (done) => {
+    test("{{ .Method }} {{ .DomainName }}", (done) => {
       request(app)
-        .{{ .Method }}("/{{ .DomainName }}s")
+        .{{ .Method }}("/{{ .DomainName }}")
         .expect("Content-Type", /json/)
         .expect(200)
     });

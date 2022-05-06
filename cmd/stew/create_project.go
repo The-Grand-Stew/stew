@@ -60,17 +60,21 @@ func createProject() error {
 	// change directories to projects path
 	os.Chdir(projectPath)
 
-	commands.ShowMessage("success", fmt.Sprintf("Project created at path %s! Go ahead and create your first service", projectPath), false, false)
+	commands.ShowMessage("success", fmt.Sprintf("Project created at path %s! Go ahead and create your first service....", projectPath), true, true)
 	// ask for infra type
 	err = survey.Ask(surveys.CloudInfraTypeQuestion, &Config.InfrastructureType, survey.WithIcons(surveys.SurveyIconsConfig))
 	showError(err)
 	// change according to infra type
+	// UNCOMMENT ONCE SERVERLESS COMES IN
 	switch Config.InfrastructureType {
 	case "serverless":
 		runServerlessBased()
 	case "container-based":
 		runContainerBased()
 	}
+	// REMOVE AFTER SERVERLESS
+	// Config.InfrastructureType = "container-based"
+	// runContainerBased()
 	// create a .stew config file in the project directory
 	err = Config.CreateConfig()
 	showError(err)

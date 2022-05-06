@@ -1,8 +1,10 @@
 package commands
 
 import (
-	"errors"
+	"os"
+	"stew/pkg/templates/surveys"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -10,22 +12,23 @@ import (
 	"github.com/aws/aws-sdk-go/service/ecr"
 )
 
-func CheckCredentials() error {
+func CheckCredentials() {
 	//TODO: look inot chain provider extra env cred is not needed
-	// Retrieve the credentials value from env vars
 	creds := credentials.NewEnvCredentials()
 	_, errEnv := creds.Get()
-	creds = credentials.NewChainCredentials([]credentials.Provider{})
-	if errEnv == nil {
-		return nil
+
+	if errEnv != nil {
+
+		ShowMessage("info", "AWS Credentials not found, setting credentials", true, false)
+		var AWSAccessKeyId, AWSSecretAccessKey, AWSSessionToken string
+		survey.Ask(surveys.AWSAccessKeyId, &AWSAccessKeyId)
+		survey.Ask(surveys.AWSSecretAccessKey, &AWSSecretAccessKey)
+		survey.Ask(surveys.AWSSessionToken, &AWSSessionToken)
+		os.Setenv("AWS_SECRET_ACCESS_KEY", AWSAccessKeyId)
+		os.Setenv("AWS_ACCESS_KEY_ID", AWSSecretAccessKey)
+		os.Setenv("AWS_SESSION_TOKEN", AWSSessionToken)
 	}
-	// Retrieve the credentials value from chain
-	_, errChain := creds.Get()
-	if errChain != nil {
-		// handle error
-		return errors.New("Credentials not found, please configure your AWS credentials manually for now.(Configuration from stew coming soon)")
-	}
-	return nil
+
 }
 
 func CreateECRRepository(repoName string) (*string, error) {

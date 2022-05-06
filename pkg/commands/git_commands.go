@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"stew/pkg/templates/repositories"
@@ -11,6 +12,9 @@ import (
 
 func Clone(gitUrl, clonePath string) error {
 	token := os.Getenv("HOMEBREW_GITHUB_API_TOKEN")
+	if token == "" {
+		return errors.New("Github token not found! Cannot download any of our repositories! please make sure to run `export HOMEBREW_GITHUB_API_TOKEN=<TOKEN>`")
+	}
 	// Clone project template.
 	_, err := git.PlainClone(
 		clonePath,

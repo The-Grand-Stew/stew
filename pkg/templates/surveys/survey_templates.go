@@ -4,13 +4,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-// type CreateAnswers struct {
-// 	Language      string
-// 	Backend       string
-// 	Proxy         string
-// 	AgreeCreation bool `survey:"agree"`
-// }
-
 var (
 	SurveyIconsConfig = func(icons *survey.IconSet) {
 		icons.Question.Format = "cyan"
@@ -76,7 +69,6 @@ var (
 				Message: "Choose a language:",
 				Options: []string{
 					"go",
-					"python",
 					"node",
 				},
 				Default:  "go",
@@ -168,22 +160,12 @@ var (
 				Message: "Choose a database:",
 				Options: []string{
 					"postgres",
-					"mysql",
+					"mongodb",
 				},
 				Default:  "postgres",
 				PageSize: 2,
 			},
 			Validate: survey.Required,
-		},
-	}
-
-	AgreeCreation = []*survey.Question{
-		{
-			Name: "agree",
-			Prompt: &survey.Confirm{
-				Message: "Are you sure that we can proceed ? ;)",
-				Default: true,
-			},
 		},
 	}
 )

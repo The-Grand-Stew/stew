@@ -1,6 +1,7 @@
 package stew
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"stew/cmd/tfaws"
@@ -17,8 +18,8 @@ import (
 var setupInfra = &cobra.Command{
 	Use:     "setup-infrastructure",
 	Aliases: []string{"setup-infra"},
-	Short:   "Scaffolds infrastructure creation scripts in terraform",
-	Long:    "",
+	Short:   "Create base infrastructure for services",
+	Long:    "Create basic infrastructure components like VPCs, VPN endpoints etc on the chosen cloud provider",
 	RunE:    setupInfraCommand,
 }
 
@@ -59,7 +60,7 @@ func runBaseSetup(infraPath string) {
 	}
 }
 
-func setupInfraCommand(cmd *cobra.Command, args []string) error {
+func createBaseInfra() error {
 	// load the project config
 	err = Config.LoadConfig()
 	showError(err)
@@ -70,16 +71,23 @@ func setupInfraCommand(cmd *cobra.Command, args []string) error {
 	infraPath := filepath.Join(currentDir, "infrastructure")
 	err = os.Mkdir(infraPath, os.ModePerm)
 	showError(err)
+	err = Config.CreateConfig()
+	fmt.Println(Config)
 	// run tf init scripts for setting up tfstate bucket according to cloud
-	commands.ShowMessage("info", "Creating terraform remote state resources...", true, true)
+	commands.ShowMessage("info", "Creating terraform remote state resources...", true, false)
 	createTfStateResources(infraPath)
 	// run base setup according to cloud
 	commands.ShowMessage("info", "Setting up your Base Infrastructure...", true, true)
-	runBaseSetup(infraPath)
 	// save the config
-	err = Config.CreateConfig()
+
+	runBaseSetup(infraPath)
 	showError(err)
+	commands.ShowMessage("success", "Base Infrastructure setup done!", true, true)
 	return nil
+}
+
+func setupInfraCommand(cmd *cobra.Command, args []string) error {
+	return createBaseInfra()
 }
 
 func init() {
