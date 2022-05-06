@@ -37,11 +37,11 @@ func ExecCommand(command string, options []string, silentMode bool) error {
 	// Create a new scanner and run goroutine func with output, if not in silent mode.
 	if !silentMode {
 		scanner := bufio.NewScanner(cmdReader)
-		go func() {
-			for scanner.Scan() {
-				ShowMessage("", scanner.Text(), false, false)
-			}
-		}()
+		// go func() {
+		for scanner.Scan() {
+			ShowMessage("", scanner.Text(), false, false)
+		}
+		// }()
 	}
 
 	// Wait for executing command.

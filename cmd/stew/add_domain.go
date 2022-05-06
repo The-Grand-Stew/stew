@@ -38,6 +38,7 @@ func showApplist(app configs.AppConfig) {
 	configType, appList := configs.DetectConfigType()
 	switch configType {
 	case 1:
+		// project directory
 		var appName string
 		commands.ShowMessage("info", "Your are running this command from your project directory. You'll have to choose a service", true, false)
 		question := surveys.GenerateAppListTemplate(appList)
@@ -49,10 +50,11 @@ func showApplist(app configs.AppConfig) {
 	case -1:
 		showError(errors.New("Failed to detect the stew config. Are you in your project directory?"))
 	}
+	//change to app
 	os.Chdir(app.AppName)
 }
 
-func runDomainCommand(cmd *cobra.Command, args []string) error {
+func createDomain() error {
 	//load the config file
 	var app configs.AppConfig
 	// Detect the type of config: project or app
@@ -73,9 +75,13 @@ func runDomainCommand(cmd *cobra.Command, args []string) error {
 	// update config for the app with the additional domain added
 	err = app.UpdateAppConfig()
 	showError(err)
-	commands.ShowMessage("success", fmt.Sprintf("Successfully created Domain %s!", domain), true, false)
+	commands.ShowMessage("success", fmt.Sprintf("Successfully created additional domain %s for service!", domain), true, true)
+	//TODO: decide if we want to move to the project directory again here
 	return nil
+}
 
+func runDomainCommand(cmd *cobra.Command, args []string) error {
+	return createDomain()
 }
 
 func init() {

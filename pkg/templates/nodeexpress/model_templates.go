@@ -18,7 +18,7 @@ type DomainTemplate struct {
 	TemplateName  string
 	DomainName    string
 	DirectoryPath string
-	Method string
+	Method        string
 }
 
 // func AddNodeExpressapiTemplate(modelName string, directoryPath string, modelTemplate string) error {
@@ -37,7 +37,6 @@ type DomainTemplate struct {
 // 	f.Close()
 // 	return nil
 // }
-
 
 func AddNodeExpressapiTemplate(d DomainTemplate) error {
 	d.DomainName = strings.Title(d.DomainName)

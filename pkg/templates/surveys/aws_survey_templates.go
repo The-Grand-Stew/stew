@@ -30,6 +30,35 @@ var (
 		},
 	}
 
+	AWSSecretAccessKey = []*survey.Question{
+		{
+			Name: "cred",
+			Prompt: &survey.Password{
+				Message: "Enter value for AWS_SECRET_ACCESS_KEY: ",
+			},
+			Validate: survey.Required,
+		},
+	}
+
+	AWSAccessKeyId = []*survey.Question{
+		{
+			Name: "cred",
+			Prompt: &survey.Password{
+				Message: "Enter value for AWS_ACCESS_KEY_ID: ",
+			},
+			Validate: survey.Required,
+		},
+	}
+
+	AWSSessionToken = []*survey.Question{
+		{
+			Name: "cred",
+			Prompt: &survey.Password{
+				Message: "Enter value for AWS_SESSION_TOKEN (optional): ",
+			},
+		},
+	}
+
 	AWSComponentQuestion = []*survey.Question{
 		{
 			Name: "region",
