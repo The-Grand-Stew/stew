@@ -7,7 +7,7 @@ import (
 
 // type Map map[string]interface{}
 
-var ExtensionMap = map[string]string{"nodejs": ".js", "go": ".go"}
+var ExtensionMap = map[string]string{"nodejs": ".js", "go": ".go", "packagejson": ".json"}
 
 // func (m Map) M(s string) Map {
 // 	return m[s].(map[string]interface{})
@@ -69,6 +69,7 @@ var ExtensionMap = map[string]string{"nodejs": ".js", "go": ".go"}
 func UpdateYmlContents(filename string, property string, value string) {
 	setString := "." + property + " +=" + value + ""
 	UpdateYmlFile(setString, filename)
+	fmt.Println("Updated:" + filename + " contents")
 	// options := []string{"-i", setString, filename}
 	// err := commands.ExecCommand("yq", options, true)
 	// if err != nil {
@@ -111,7 +112,8 @@ func UpdateYmlFile(setString string, filename string) {
 	err := commands.ExecCommand("yq", options, true)
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		fmt.Println("saved updated yaml")
 	}
+	// else {
+	// 	fmt.Println("saved updated yaml")
+	// }
 }

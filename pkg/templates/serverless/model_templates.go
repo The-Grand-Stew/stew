@@ -1,9 +1,11 @@
 package serverless
 
 import (
+	"fmt"
 	"html/template"
 	"os"
 	"path/filepath"
+	commands "stew/pkg/commands"
 	"stew/pkg/utils"
 	"strings"
 )
@@ -35,11 +37,18 @@ func AddServerlessTemplate(d LambdaTemplate, fileType string) error {
 	filename := fileType
 	secondLevelPath := "handlers"
 	extension = utils.ExtensionMap[d.Lang]
+	var path string
 	if fileType == "test" {
 		filename = d.FunctionName + "_test"
 		secondLevelPath = "__tests__"
 	}
-	path := filepath.Join(d.DirectoryPath, secondLevelPath, strings.ToLower(d.FunctionName))
+	if fileType == "packagejson" {
+		path = filepath.Join(d.DirectoryPath, secondLevelPath)
+		filename = "package"
+		extension = ".json"
+	} else {
+		path = filepath.Join(d.DirectoryPath, secondLevelPath, strings.ToLower(d.FunctionName))
+	}
 	t, err := template.New("modelTemplate").Funcs(funcMap).Parse(d.TemplateName)
 	if err != nil {
 		return err
@@ -57,5 +66,11 @@ func AddServerlessTemplate(d LambdaTemplate, fileType string) error {
 	// vomit output to model file
 	t.Execute(f, d)
 	f.Close()
+	if fileType == "packagejson" {
+		fmt.Println("Installing lambda dependencies...")
+		options := []string{"install"}
+		commands.ExecCommandWrapper("npm", options, path)
+	}
+
 	return nil
 }

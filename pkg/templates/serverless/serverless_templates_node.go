@@ -48,3 +48,14 @@ describe('{{ .FunctionName }} sanity test', () => {
   });
 });
 `
+const ServerlessPackageJSON string = `
+{
+  "name": "{{ .Project }}",
+  "version": "1.0.0",
+  "description": "Lambda functions for {{ .Project }}",
+  "main": "handler.js",
+  "dependencies": {
+    "lambda-log": "^3.1.0"
+  }
+}
+`

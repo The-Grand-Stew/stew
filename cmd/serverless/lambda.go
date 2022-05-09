@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+
 	templates "stew/pkg/templates/serverless"
 	"stew/pkg/utils"
 	"strings"
@@ -30,20 +31,18 @@ func AddLambda(appName string, lambdaConfig templates.LambdaTemplate) error {
 	err = addLambdaFile(lambdaConfig.FunctionName, "test", lambdaConfig.Lang)
 	if err != nil {
 		fmt.Printf("Errored out %s", err)
-
 		return err
 	}
-	err = addLambdaFile(lambdaConfig.FunctionName, "handler", lambdaConfig.Lang)
-	if err != nil {
-		fmt.Printf("Errored out handler %s", err)
+	if lambdaConfig.Lang == "nodejs" {
+		err = addLambdaFile(lambdaConfig.FunctionName, "packagejson", lambdaConfig.Lang)
+		if err != nil {
+			fmt.Printf("Errored out %s", err)
+			return err
+		}
 	}
-	err = addLambdaFile(lambdaConfig.FunctionName, "test", lambdaConfig.Lang)
-	if err != nil {
-		fmt.Printf("Errored out test file %s", err)
-	}
-	fmt.Println("Updating lambda config")
 	functionTemplateString := compileServerlessYamlConfigs(lambdaConfig, templates.ServerlessFunctionConfigYq)
 	currentDir, _ := os.Getwd()
+	fmt.Println("Attempting to update functions.yml")
 	functionFolderPath := filepath.Join(currentDir, "resources", "functions.yml")
 	utils.UpdateYmlContents(functionFolderPath, "functions", functionTemplateString)
 
@@ -53,7 +52,6 @@ func AddLambda(appName string, lambdaConfig templates.LambdaTemplate) error {
 func compileServerlessYamlConfigs(templateData templates.LambdaTemplate, templateString string) string {
 
 	t, err := template.New("modelTemplate").Funcs(funcMap).Parse(templateString)
-	fmt.Println(t)
 	if err != nil {
 		fmt.Println("failed to compile template%w", err)
 	}
@@ -81,8 +79,11 @@ func addLambdaFile(lambdaName string, fileType string, language string) error {
 		} else if language == "nodejs" {
 			templateName = templates.ServerlessNodeTest
 		}
+	case "packagejson":
+		if language == "nodejs" {
+			templateName = templates.ServerlessPackageJSON
+		}
 	}
-
 	lambdaSettings.TemplateName = templateName
 	lambdaSettings.FunctionName = lambdaName
 	lambdaSettings.Lang = language

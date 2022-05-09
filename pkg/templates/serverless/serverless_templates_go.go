@@ -1,6 +1,6 @@
 package serverless
 
-const ServerlessGoLambda string = `package {{ .FunctionName }}
+const ServerlessGoLambda string = `package main
 
 import (
 	"errors"

@@ -5,7 +5,7 @@ const ServerlessFunctionConfigYq string = `{
 	"name":"{{ .FunctionName }}-{{ .Environment }}",
 	"memorySize":128,
 	"environment":{},
-	"handler":"../handlers/{{ .FunctionName }}/{{ .HandlerName }}",
+	"handler":"./handlers/{{ .FunctionName }}/{{ .HandlerName }}",
 	"events":[
 		{
 			"httpApi": {
