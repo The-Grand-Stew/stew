@@ -1,7 +1,6 @@
 package serverless
 
 import (
-	"fmt"
 	"html/template"
 	"os"
 	"path/filepath"
@@ -66,8 +65,12 @@ func AddServerlessTemplate(d LambdaTemplate, fileType string) error {
 	// vomit output to model file
 	t.Execute(f, d)
 	f.Close()
+	if d.Lang == "go" && fileType == "handler" {
+		commands.GoModInit(path, d.AppName)
+		commands.GoModTidy(path)
+	}
 	if fileType == "packagejson" {
-		fmt.Println("Installing lambda dependencies...")
+		commands.ShowMessage("info", "Installing lambda dependencies", true, true)
 		options := []string{"install"}
 		commands.ExecCommandWrapper("npm", options, path)
 	}

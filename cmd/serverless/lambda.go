@@ -42,7 +42,7 @@ func AddLambda(appName string, lambdaConfig templates.LambdaTemplate) error {
 	}
 	functionTemplateString := compileServerlessYamlConfigs(lambdaConfig, templates.ServerlessFunctionConfigYq)
 	currentDir, _ := os.Getwd()
-	fmt.Println("Attempting to update functions.yml")
+	// fmt.Println("Attempting to update functions.yml")
 	functionFolderPath := filepath.Join(currentDir, "resources", "functions.yml")
 	utils.UpdateYmlContents(functionFolderPath, "functions", functionTemplateString)
 

@@ -46,7 +46,8 @@ func CreateService(project string, appName string, runtime string, provider stri
 		commands.ShowMessage("error", fmt.Sprintf("Failed to add git pre-commit hooks: %s", err), true, true)
 		return err
 	}
-	fmt.Println("Updating serverless variables file")
+	commands.ShowMessage("info", "Updating serverless variables file", true, true)
+
 	varFileName := filepath.Join(clonePath, "variables."+env+".yml")
 	varFilePropsTemplate := `{"runtime": "{{ .Runtime }}","environment": "{{ .Environment }}" ,"project": "{{ .Project }}" ,"app": "{{ .AppName }}","region": "{{ .Region }}" }`
 	var config templates.LambdaTemplate
