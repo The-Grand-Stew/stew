@@ -41,10 +41,7 @@ func generateCommand(commandStr string) bool {
 	return false
 }
 
-const advantageContent string = `As cloud engineers/ application developers we work with permutations and combinations of  a set of tools, languages and technologies on our projects. On every project we invest a significant amount of time setting up our codebases, deployment script and pipelines. Some of these tasks can be mundane and at times repitative. A great opportunity to introduce some automation – don’t you think ?​`
-const scenarioContent string = ``
 const introContent string = `Stew is a CLI tool that creates code scaffolds for developers based on their needs. Just like preparing a stew IRL, stew CLI allows a developer to pick an architecture pattern, add required routes, models etc (ingredients) and finally add some common utility functions for ex: oAuth connectors, custom validation libraries, postgres/mongo/DDB connectors etc (garnishes). Also because we are cloud engineers , we create the infrastructure setup scripts for the application too !. This means that after using stewCLI (once your stew is cooked), a developer has to only add in the bits that matter into the code aka “the business logic”.  Stew is language agnostic and aims to be cloud agnostic (currently supports AWS only) . Yes, that’s right , you can theoretically use stew to scaffold code in ANY language you choose because stew is designed to be use plugins to scaffold code. At this time we have plugins for node js and golang.`
-const advantage2Content string = `“Automation is cost cutting by tightening the corners and not cutting them” - This quote describes in a nutshell, what stew aims to be. Stew aims to leverage the expertise and experience of engineers in Deloitte to build high quality code scaffolds ,infrastructure scripts and deployment pipelines for diverse use cases. Using these scaffolds, a development teams reaps the following benefits:​`
 
 func showIntro() {
 	figure.NewFigure("Stew", "larry3d", true).Print()
@@ -60,11 +57,6 @@ func showIntro() {
 		},
 	}
 	survey.Ask(next, &answer, survey.WithIcons(surveys.SurveyIconsConfig))
-	commands.ShowMessage("doc", advantageContent, false, false)
-	commands.ShowMessage("doc", advantage2Content, false, false)
-	commands.ShowMessage("doc", "1. Significant time saving", false, false)
-	commands.ShowMessage("doc", "2. Maintain code quality – Readability, maintainability, standardization & documentation​", true, true)
-	commands.ShowMessage("doc", "3. Significant time saving", false, false)
 	ready := []*survey.Question{
 		{
 			Name: "ready",
@@ -82,7 +74,6 @@ func showIntro() {
 	} else {
 		commands.ShowMessage("doc", "Maybe not today! See you next time", true, true)
 		os.Exit(0)
-
 	}
 
 }
@@ -102,7 +93,7 @@ func runScaffold() {
 		os.Chdir(Config.ProjectName)
 	}
 	commands.ShowMessage("doc", `Create another service called "payments" that runs on port 8001 and choose node as your preferred language`, true, false)
-	if run = generateCommand("stew create-app"); run {
+	if run = generateCommand("stew create-service"); run {
 		createService()
 	}
 	commands.ShowMessage("success", `There! You now have 2 services configured! You can take a look at your project directory to see if you have the boilerplate code generated. (This will open a window in VS code. Make sure you have the command line tool for VS Code installed. Else just open your project in your favorite editor)`, true, true)
@@ -169,7 +160,6 @@ func runDeploy() {
 		createDeployment()
 	}
 	commands.ShowMessage("success", "That's All Folks! It was easy, right? You can make your own customisations, write your own business logic or create more services! Its your arena now!", true, true)
-
 }
 
 func runPlayCommand(cmd *cobra.Command, args []string) error {

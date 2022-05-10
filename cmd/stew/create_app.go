@@ -16,8 +16,8 @@ var App = configs.AppConfig{}
 
 // createCmd represents the `create` command.
 var createAppCmd = &cobra.Command{
-	Use:     "create-app",
-	Aliases: []string{"create-app", "create-service"},
+	Use:     "create-service",
+	Aliases: []string{"create-app"},
 	Short:   "Create a new microservice for your domain in your project's directory",
 	Long:    "Create a new microservice for your domain in your project's directory. Always run this from your project directory",
 	RunE:    runCreateAppCommand,
