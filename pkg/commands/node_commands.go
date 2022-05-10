@@ -13,6 +13,7 @@ func ExecCommandWrapper(command string, options []string, directoryPath string) 
 	os.Chdir(directoryPath)
 	err := ExecCommand(command, options, true)
 	if err != nil {
+		os.Chdir(currentDir)
 		return err
 	}
 	os.Chdir(currentDir)
