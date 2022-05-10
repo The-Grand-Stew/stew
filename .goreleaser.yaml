@@ -51,7 +51,7 @@ brews:
     dependencies:
       - name: terraform
       - name: git
-      - name: go
+      - name: awscli
       - name: terragrunt
       - name: yq
 

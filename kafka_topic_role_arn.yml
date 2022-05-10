@@ -1,0 +1,90 @@
+kafka_topic_role_arn: arn:aws:iam::{{account_id}}:role/fetch-secrets-EKSServiceAccountRole
+kafka_topic_init_ecr: "{{ shared_ecr_registry }}/application/nl-sec-fetchsecrets-init:0.0.1"
+kafka_topic_pod_ecr: "{{ shared_ecr_registry }}/hardened/adoptopenjdk/openjdk11alpine-jre-kafka-2.5.1:0.1"
+#kafka_bootstrap: b-1.coral-dev-msk.siyzvb.c2.kafka.eu-west-1.amazonaws.com:9094,b-2.coral-dev-msk.siyzvb.c2.kafka.eu-west-1.amazonaws.com:9094,b-3.coral-dev-msk.siyzvb.c2.kafka.eu-west-1.amazonaws.com:9094
+kafka_zookeeper: z-2.coral-dev-msk.siyzvb.c2.kafka.eu-west-1.amazonaws.com:2182,z-3.coral-dev-msk.siyzvb.c2.kafka.eu-west-1.amazonaws.com:2182,z-1.coral-dev-msk.siyzvb.c2.kafka.eu-west-1.amazonaws.com:2182
+kafka_script_serviceaccount_arn: arn:aws:iam::{{account_id}}:role/kafka-topic-and-schema-deployment-EKSServiceAccountRole
+# String should be: Topic,replication factor, partition
+kafka_topics:
+  - topic,3,10
+  - tmnl_curation_data_lineage,3,10
+  - tmnl_curation_data_lineage.DLT,3,10
+  - tmnl_ingestion_data_lineage,3,10
+  - tmnl_ingestion_data_lineage.DLT,3,10
+  - tmnl_ingestion_file_data_available,3,10
+  - tmnl_ingestion_file_data_error,3,10
+  - tmnl_ingestion_file_data_processed,3,10
+  - tmnl_ingestion_file_metadata_available,3,10
+  - tmnl_ingestion_file_metadata_processed,3,10
+  - tmnl_ingestion_quality_individual_bank_check_available,3,10
+  - tmnl_ingestion_quality_individual_bank_check_error,3,10
+  - tmnl_ingestion_quality_individual_bank_check_processed,3,10
+  - tmnl_ingestion_transfer_data_available,3,10
+  - tmnl_ingestion_file_transfer_available,3,10
+  - tmnl_ingestion_file_transfer_processed,3,10
+  - tmnl_ingestion_integrity_file_available_abn,3,10
+  - tmnl_ingestion_integrity_file_available_ing,3,10
+  - tmnl_ingestion_integrity_file_available_volk,3,10
+  - tmnl_ingestion_integrity_file_available_rabo,3,10
+  - tmnl_ingestion_integrity_file_available_trio,3,10
+  - tmnl_ingestion_integrity_file_validated_abn,3,10
+  - tmnl_ingestion_integrity_file_validated_ing,3,10
+  - tmnl_ingestion_integrity_file_validated_volk,3,10
+  - tmnl_ingestion_integrity_file_validated_rabo,3,10
+  - tmnl_ingestion_integrity_file_validated_trio,3,10
+  - tmnl_ingestion_transfer_data_available_redshift,3,10
+  - tmnl_ingestion_alert_data_available,3,10
+  - tmnl_ingestion_lineage_available,3,10
+  - tmnl_ingestion_index_available,3,10
+  - tmnl_ingestion_index_processed,3,10
+  - tmnl_lambda_ingestion_file_metadata_available,3,10
+  - tmnl_lambda_ingestion_quality_individual_bank_check_available,3,10
+  - tmnl_lambda_ingestion_file_transfer_available,3,10
+  - tmnl_lambda_integrity_file_metadata_available,3,10
+  - tmnl_lambda_integrity_file_metadata_available_abn,3,10
+  - tmnl_lambda_integrity_file_metadata_available_ing,3,10
+  - tmnl_lambda_integrity_file_metadata_available_rabo,3,10
+  - tmnl_lambda_integrity_file_metadata_available_trio,3,10
+  - tmnl_lambda_integrity_file_metadata_available_volk,3,10
+  - tmnl_lambda_ingestion_quality_individual_bank_check_rerun,3,10
+  - tmnl_lambda_ingestion_quality_individual_bank_check_rerun_single,3,10
+  - tmnl_lambda_curation_available,3,10
+  - tmnl_lambda_index_apply_available,3,10
+  - tmnl_lambda_index_drop_available,3,10
+  - tmnl_lambda_ingestion_lineage_available,3,10
+  - tmnl_lambda_alert_export,3,10
+  - tmnl_lambda_alert_available,3,10
+  - tmnl_lambda_ingestion_totals,3,10
+  - tmnl_lambda_ingestion_black_box_test,3,10
+  - tmnl_ingestion_totals,3,10
+  - tmnl_lambda_ingestion_reporting_repair,3,10
+  - tmnl_lambda_ingestion_reporting_aggregation,3,10
+  - tmnl_ingestion_reporting_repair,3,10
+  - tmnl_ingestion_reporting_aggregation,3,10
+  - tmnl_lambda_reporting_cleanup,3,10
+  - tmnl_lambda_lineage_cleanup,3,10
+  - tmnl_lambda_ingestion_cleanup,3,10
+  - tmnl_lambda_logging_integritytracking,3,10
+  - tmnl_lambda_logging_ingestiontracking,3,10
+  - tmnl_lambda_logging_transfertracking,3,10
+  - tmnl_lambda_anomalydetection_service_start,3,10
+  - tmnl_lambda_logging_reporting,3,10
+  - tmnl_lambda_ingestion_manual_check_available,3,10
+  - tmnl_lambda_batch_period_mapping,3,10
+  - tmnl_lambda_curation_cleanup,3,10
+  - tmnl_lambda_network_analyses_service_start,3,10
+
+# String should be like these examples: 'URL,SCHEMA_JSON'
+kafka_avro_schemas:
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_file_metadata_available-com.tmnl.backend.schema.IngestionFileMetadataAvailableV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionFileMetadataAvailableV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"metadataFileName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The file name of the metadata file to retrieve from the S3 bucket\"},{\"name\":\"retry\",\"type\":\"boolean\",\"doc\":\"Whether this event is a manual retry\",\"default\":false}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_file_metadata_processed-com.tmnl.backend.schema.IngestionFileMetadataProcessedV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionFileMetadataProcessedV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"metadataFileName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The metadata file that has been ingested\"}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_file_data_available-com.tmnl.backend.schema.IngestionFileDataAvailableV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionFileDataAvailableV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"check\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The name of the data file to be ingested\"},{\"name\":\"bank\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The bank of which this batch came from\"},{\"name\":\"dataType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The type of data that is in the data file\"}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_file_data_processed-com.tmnl.backend.schema.IngestionDataProcessedV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionDataProcessedV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"check\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The name of the check that was performed\"},{\"name\":\"stage\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The stage for which the check was performed\"},{\"name\":\"success\",\"type\":\"boolean\",\"doc\":\"Whether the check was successful\"},{\"name\":\"status\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The status of the check that was performed\"},{\"name\":\"message\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"Optional message\",\"default\":null},{\"name\":\"numberOfLines\",\"type\":\"int\",\"doc\":\"Number of lines that were processed\"}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_file_data_error-com.tmnl.backend.schema.IngestionDataErrorV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionDataErrorV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"ingestionId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"batchId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"bank\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"check\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The check that was attempted\"},{\"name\":\"recordId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataRequestVersion\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ingestionStorageVersion\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"creationTime\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"action\",\"type\":{\"type\":\"record\",\"name\":\"IngestionDataErrorActionV1\",\"fields\":[{\"name\":\"scope\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"stage\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The stage where the error occurred. (Possible values: ingestion, individual, inter)\"},{\"name\":\"severity\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The severity of the error that occurred. (Possible values: GREEN, YELLOW, RED)\"},{\"name\":\"message\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"Optional error message\",\"default\":null},{\"name\":\"data\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"This field contains the JSON version of the data that was stored in the database.\"}]}}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_quality_individual_bank_check_available-com.tmnl.backend.schema.IngestionQualityIndividualBankCheckAvailableV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionQualityIndividualBankCheckAvailableV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"bank\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The name of the bank on which the check needs to be performed\"},{\"name\":\"batchId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The batch on which the check needs to be performed\"},{\"name\":\"check\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The check that needs to be performed\"}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_quality_individual_bank_check_processed-com.tmnl.backend.schema.IngestionDataProcessedV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionDataProcessedV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"check\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The name of the check that was performed\"},{\"name\":\"stage\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The stage for which the check was performed\"},{\"name\":\"success\",\"type\":\"boolean\",\"doc\":\"Whether the check was successful\"},{\"name\":\"status\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The status of the check  that was performed\"},{\"name\":\"message\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"Optional message\",\"default\":null},{\"name\":\"numberOfLines\",\"type\":\"int\",\"doc\":\"Number of lines that were processed\"}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_quality_individual_bank_check_error-com.tmnl.backend.schema.IngestionDataErrorV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionDataErrorV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"ingestionId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"batchId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"bank\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"check\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The check that was attempted\"},{\"name\":\"recordId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataRequestVersion\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ingestionStorageVersion\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"creationTime\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"action\",\"type\":{\"type\":\"record\",\"name\":\"IngestionDataErrorActionV1\",\"fields\":[{\"name\":\"scope\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"stage\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The stage where the error occurred. (Possible values: ingestion, individual, inter)\"},{\"name\":\"severity\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The severity of the error that occurred. (Possible values: GREEN, YELLOW, RED)\"},{\"name\":\"message\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"Optional error message\",\"default\":null},{\"name\":\"data\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"This field contains the JSON version of the data that was stored in the database.\"}]}}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_curation_data_lineage-com.tmnl.backend.schema.CurationDataLineageV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"CurationDataLineageV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"event_name\",\"type\":\"string\",\"doc\":\"Action carried out on the data\"},{\"name\":\"event_timestamp\",\"type\":\"string\",\"doc\":\"Timestamp of action\"},{\"name\":\"batch_id\",\"type\":\"string\",\"doc\":\"Comma-separated string with batch ids for the data that was curated via the action\"},{\"name\":\"event_schema\",\"type\":\"string\",\"doc\":\"Dbt schema in which the action occurred\"},{\"name\":\"event_model\",\"type\":\"string\",\"doc\":\"Dbt model in which the action occurred\"},{\"name\":\"event_user\",\"type\":\"string\",\"doc\":\"Database user\"},{\"name\":\"event_is_full_refresh\",\"type\":\"boolean\",\"doc\":\"Whether models are fully refreshed\"},{\"name\":\"invocation_id\",\"type\":\"string\",\"doc\":\"Whether models are fully refreshed\"},{\"name\":\"sent\",\"type\":\"boolean\",\"doc\":\"Whether message has been sent\"},{\"name\":\"hashed_primary_key\",\"type\":\"string\",\"doc\":\"Hash identifying event\"},{\"name\":\"git_sha\",\"type\":\"string\",\"doc\":\"Sha of current git commit\"},{\"name\":\"scope\",\"type\":\"string\",\"doc\":\"Level at which the event takes place, e.g. script\"}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_data_lineage-com.tmnl.backend.schema.IngestionDataLineageV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionDataLineageV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"ingestionId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"batchId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"bank\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"check\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The check that was attempted\"},{\"name\":\"recordId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataRequestVersion\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ingestionStorageVersion\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"creationTime\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"action\",\"type\":{\"type\":\"record\",\"name\":\"IngestionDataSuccessActionV1\",\"fields\":[{\"name\":\"scope\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"stage\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The stage where the error occurred. (Possible values: ingestion, individual, inter)\"},{\"name\":\"message\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"Optional message\",\"default\":null},{\"name\":\"data\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"This field contains the JSON version of the data that was stored in the database.\"}]}}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_data_lineage-com.tmnl.backend.schema.IngestionIntegrityDataFileProcessedV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionIntegrityDataFileProcessedV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"ingestionId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"batchId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"bank\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataType\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The file data type\"},{\"name\":\"dataRequestVersion\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"dataFileName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The file name of the data file of which the signature is signed\"},{\"name\":\"signature\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The original signature\"},{\"name\":\"signedSignature\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"The signed signature\"}]}"}'
+  - 'https://schema-registry.kafka:8082/subjects/tmnl_ingestion_data_lineage-com.tmnl.backend.schema.IngestionDataAuditV1/versions,{"schema": "{\"type\":\"record\",\"name\":\"IngestionDataAuditV1\",\"namespace\":\"com.tmnl.backend.schema\",\"fields\":[{\"name\":\"ingestionId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"batchId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{
