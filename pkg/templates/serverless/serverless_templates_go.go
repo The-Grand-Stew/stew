@@ -3,21 +3,19 @@ package serverless
 const ServerlessGoLambda string = `package main
 
 import (
-        "fmt"
-        "context"
-        "github.com/aws/aws-lambda-go/lambda"
+	"context"
+
+	"github.com/aws/aws-lambda-go/events"
+	lambda "github.com/icarus-sullivan/mock-lambda"
 )
 
-type MyEvent struct {
-        Name string ` + `json:"name"` + `
-}
-
-func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
-        return fmt.Sprintf("Hello %s!", name.Name ), nil
+func hello(context.Context, events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return events.APIGatewayProxyResponse{StatusCode: 200, Body: "Hello from λ!"}, nil
 }
 
 func main() {
-        lambda.Start(HandleRequest)
+	// Make the handler available for Remote Procedure Call by AWS Lambda
+	lambda.Start(hello)
 }
 `
 const ServerlessGoTest string = `package {{ .FunctionName }}_test
@@ -40,12 +38,12 @@ func TestHandler(t *testing.T) {
 	}{
 		{
 			request: events.APIGatewayProxyRequest{name: "Developer"},
-			expect:  "Hello Developer",
+			expect:  "Hello Developer from λ!",
 			err:     nil,
 		},
 		{
 			request: events.APIGatewayProxyRequest{name: ""},
-			expect:  "",
+			expect:  "Hello from λ!",
 			err:     {{ .FunctionName }}.ErrDataNotProvided,
 		},
 	}
