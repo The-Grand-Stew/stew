@@ -40,7 +40,7 @@ func runLambda(cmd *cobra.Command, args []string) error {
 }
 
 func runLambdaCommand() error {
-	fmt.Println(app.LoadAppConfig())
+	// fmt.Println(app.LoadAppConfig())
 	//load the config file
 	var app configs.AppConfig
 	// Detect the type of config: project or app

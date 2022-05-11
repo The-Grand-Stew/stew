@@ -22,7 +22,7 @@ var lambdaSettings = templates.LambdaTemplate{AppName: "", DirectoryPath: ""}
 func AddLambda(appName string, lambdaConfig templates.LambdaTemplate) error {
 	lambdaSettings.AppName = appName
 	err := addLambdaFile(lambdaConfig.FunctionName, "handler", lambdaConfig.Lang)
-	fmt.Println(lambdaConfig.DirectoryPath)
+	// fmt.Println(lambdaConfig.DirectoryPath)
 	if err != nil {
 		fmt.Printf("Errored out %s", err)
 
