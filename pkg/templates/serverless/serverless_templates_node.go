@@ -28,7 +28,7 @@ const ServerlessNodeTest string = `'use strict';
 
 // tests for {{ .FunctionName }}
 
-const mod = require('./handlers/{{ .FunctionName }}/index');
+const mod = require('../../handlers/{{ .FunctionName | toLower }}/handler');
 
 const jestPlugin = require('serverless-jest-plugin');
 const lambdaWrapper = jestPlugin.lambdaWrapper;
