@@ -13,10 +13,10 @@ import (
 )
 
 var playCmd = &cobra.Command{
-	Use:     "play",
-	Aliases: []string{"play"},
+	Use:     "play-container",
+	Aliases: []string{"play-c"},
 	Short:   "CLI tour",
-	Long:    "Get an small tour of using the CLI to create and deploy services using stew",
+	Long:    "Get a small tour of using the CLI to create and deploy services using stew",
 	RunE:    runPlayCommand,
 }
 

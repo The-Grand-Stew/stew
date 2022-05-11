@@ -1,7 +1,6 @@
 package stew
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"stew/cmd/tfaws"
@@ -72,7 +71,7 @@ func createBaseInfra() error {
 	err = os.Mkdir(infraPath, os.ModePerm)
 	showError(err)
 	err = Config.CreateConfig()
-	fmt.Println(Config)
+	// fmt.Println(Config)
 	// run tf init scripts for setting up tfstate bucket according to cloud
 	commands.ShowMessage("info", "Creating terraform remote state resources...", true, false)
 	createTfStateResources(infraPath)

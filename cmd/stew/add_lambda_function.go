@@ -28,14 +28,19 @@ import (
 
 var lambdaCmd = &cobra.Command{
 	Use:     "add-lambda",
-	Aliases: []string{"db", "database"},
+	Aliases: []string{"lambda"},
 	Short:   "Add a new lambda function",
 	Long:    "\nAdd a new lambda function into your existing serverless project",
-	RunE:    runLambdaCommand,
+	RunE:    runLambda,
 }
 
-func runLambdaCommand(cmd *cobra.Command, args []string) error {
-	fmt.Println(app.LoadAppConfig())
+func runLambda(cmd *cobra.Command, args []string) error {
+	err := runLambdaCommand()
+	return err
+}
+
+func runLambdaCommand() error {
+	// fmt.Println(app.LoadAppConfig())
 	//load the config file
 	var app configs.AppConfig
 	// Detect the type of config: project or app
@@ -68,7 +73,7 @@ func runLambdaCommand(cmd *cobra.Command, args []string) error {
 	lambdaConfig.PathPart = httpPath
 	lambdaConfig.HttpMethod = httpMethod
 	langtest := re.Split(app.Runtime, -1)
-	fmt.Println("lang", langtest[0])
+	// fmt.Println("lang", langtest[0])
 	lambdaConfig.Lang = langtest[0]
 	extension := utils.ExtensionMap[langtest[0]]
 	if langtest[0] == "nodejs" {

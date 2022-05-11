@@ -3,36 +3,21 @@ package serverless
 const ServerlessGoLambda string = `package main
 
 import (
-	"errors"
-	"log"
-
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
+        "fmt"
+        "context"
+        "github.com/aws/aws-lambda-go/lambda"
 )
 
-var (
-	ErrDataNotProvided = errors.New("No data was provided in the HTTP body")
-)
+type MyEvent struct {
+        Name string ` + `json:"name"` + `
+}
 
-func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-
-	// stdout and stderr are sent to AWS CloudWatch Logs
-	log.Printf("Processing Lambda request %s\n", request.RequestContext.RequestID)
-
-	// If no data is provided in the HTTP request body, throw an error
-	if len(request.Body) < 1 {
-		return events.APIGatewayProxyResponse{}, ErrDataNotProvided
-	}
-
-	return events.APIGatewayProxyResponse{
-		Body:       "Hello " + request.Body,
-		StatusCode: 200,
-	}, nil
-
+func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
+        return fmt.Sprintf("Hello %s!", name.Name ), nil
 }
 
 func main() {
-	lambda.Start(Handler)
+        lambda.Start(HandleRequest)
 }
 `
 const ServerlessGoTest string = `package {{ .FunctionName }}_test
@@ -54,12 +39,12 @@ func TestHandler(t *testing.T) {
 		err     error
 	}{
 		{
-			request: events.APIGatewayProxyRequest{Body: "Developer"},
+			request: events.APIGatewayProxyRequest{name: "Developer"},
 			expect:  "Hello Developer",
 			err:     nil,
 		},
 		{
-			request: events.APIGatewayProxyRequest{Body: ""},
+			request: events.APIGatewayProxyRequest{name: ""},
 			expect:  "",
 			err:     {{ .FunctionName }}.ErrDataNotProvided,
 		},

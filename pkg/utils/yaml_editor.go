@@ -69,7 +69,7 @@ var ExtensionMap = map[string]string{"nodejs": ".js", "go": ".go", "packagejson"
 func UpdateYmlContents(filename string, property string, value string) {
 	setString := "." + property + " +=" + value + ""
 	UpdateYmlFile(setString, filename)
-	fmt.Println("Updated:" + filename + " contents")
+	// fmt.Println("Updated:" + filename + " contents")
 	// options := []string{"-i", setString, filename}
 	// err := commands.ExecCommand("yq", options, true)
 	// if err != nil {
