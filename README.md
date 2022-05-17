@@ -2,9 +2,7 @@
 ## Install
 
 ### Brew Installlation
-- Request for an Access Token from any one of the contacts provided below
-- export the token as an environment variable
-`export HOMEBREW_GITHUB_ACCESS_TOKEN="your-token"`
+
 - Install using brew
 ``` 
 brew tap The-Grand-Stew/stew
