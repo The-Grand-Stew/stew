@@ -6,8 +6,9 @@
 - export the token as an environment variable
 `export HOMEBREW_GITHUB_ACCESS_TOKEN="your-token"`
 - Install using brew
-``` brew tap The-Grand-Stew/stew
-    brew install stew
+``` 
+brew tap The-Grand-Stew/stew
+brew install stew
 ```
 
 ## Usage
