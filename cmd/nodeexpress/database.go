@@ -14,7 +14,7 @@ func AddPostgres() error {
 	currentDir, _ := os.Getwd()
 	// clone gist to db folder
 	clonePath := filepath.Join(currentDir, "database")
-	commands.ShowMessage("info", fmt.Sprintf("Adding Database scripts at : %s", clonePath), true, false)
+	logging.ShowMessage("info", fmt.Sprintf("Adding Database scripts at : %s", clonePath), true, false)
 	err := commands.Clone(gitUrl, clonePath)
 	if err != nil {
 		return err

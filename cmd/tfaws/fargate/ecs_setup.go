@@ -11,22 +11,22 @@ import (
 func ECRSetup(infraPath string, tfvars map[string]string) (string, error) {
 	path := filepath.Join(infraPath, "aws-ecs-fargate", "ecs-fargate")
 	// check for creds
-	commands.ShowMessage("info", "Checking for Credentials..", true, true)
+	logging.ShowMessage("info", "Checking for Credentials..", true, true)
 	commands.CheckCredentials()
 	currentDir, _ := os.Getwd()
 	// generate vars file
 	varsPath := filepath.Join(path, "vars.tfvars")
-	commands.ShowMessage("info", "Generating tfvars file..", true, true)
+	logging.ShowMessage("info", "Generating tfvars file..", true, true)
 	err := commands.GenerateVarsFile(tfvars, varsPath)
 	if err != nil {
 		return "", err
 	}
-	commands.ShowMessage("info", "Generating terragrunt file..", true, true)
+	logging.ShowMessage("info", "Generating terragrunt file..", true, true)
 	// generate terragrunt file
 	commands.GenerateTerragruntFile(tfvars, path)
 	// run terragrunt apply for ecr only
 	os.Chdir(path)
-	commands.ShowMessage("info", "Creating ECR..", true, true)
+	logging.ShowMessage("info", "Creating ECR..", true, true)
 	target := "aws_ecr_repository.app"
 	err = commands.TerragruntInit()
 	if err != nil {
@@ -57,12 +57,12 @@ func FargateSetup(infraPath string, tfvars map[string]string) error {
 	currentDir, _ := os.Getwd()
 	// generate vars file
 	varsPath := filepath.Join(path, "vars.tfvars")
-	commands.ShowMessage("info", "Generating tfvars file..", true, true)
+	logging.ShowMessage("info", "Generating tfvars file..", true, true)
 	err := commands.GenerateVarsFile(tfvars, varsPath)
 	if err != nil {
 		return err
 	}
-	commands.ShowMessage("info", "Generating terragrunt file..", true, true)
+	logging.ShowMessage("info", "Generating terragrunt file..", true, true)
 	// generate terragrunt file
 	commands.GenerateTerragruntFile(tfvars, path)
 	// run terragrunt apply for ecr only
@@ -72,7 +72,7 @@ func FargateSetup(infraPath string, tfvars map[string]string) error {
 		fmt.Println(err)
 		return err
 	}
-	commands.ShowMessage("info", "Deploying to Fargate..", true, true)
+	logging.ShowMessage("info", "Deploying to Fargate..", true, true)
 	err = commands.TerragruntApply(true)
 	if err != nil {
 		return err
@@ -83,8 +83,8 @@ func FargateSetup(infraPath string, tfvars map[string]string) error {
 	if err != nil {
 		return err
 	}
-	commands.ShowMessage("success", "Your Service is Deployed! Here's your API Gateway invoke variable is: ", true, true)
-	commands.ShowMessage("success", invoke_url, true, true)
+	logging.ShowMessage("success", "Your Service is Deployed! Here's your API Gateway invoke variable is: ", true, true)
+	logging.ShowMessage("success", invoke_url, true, true)
 	return nil
 }
 
@@ -94,10 +94,10 @@ func Deploy(infraPath, imageName string, tfvars map[string]string) error {
 	if err != nil {
 		return err
 	}
-	commands.ShowMessage("info", "Repository url: "+repositoryUrl, true, false)
+	logging.ShowMessage("info", "Repository url: "+repositoryUrl, true, false)
 	// push to ecr
 	registry := strings.Split(repositoryUrl, "/")[0]
-	commands.ShowMessage("info", "Pushing Image to registry", true, false)
+	logging.ShowMessage("info", "Pushing Image to registry", true, false)
 	err = commands.DockerLogin(tfvars["region"], registry, "aws")
 	if err != nil {
 		return err
@@ -108,7 +108,7 @@ func Deploy(infraPath, imageName string, tfvars map[string]string) error {
 	}
 	// deploy to fg
 	tfvars["app_image"] = image
-	commands.ShowMessage("info", "Starting Fargate setup...", true, false)
+	logging.ShowMessage("info", "Starting Fargate setup...", true, false)
 	err = FargateSetup(infraPath, tfvars)
 	// showError(err)
 	return err

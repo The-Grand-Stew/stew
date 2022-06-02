@@ -113,7 +113,5 @@ func UpdateYmlFile(setString string, filename string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	// else {
-	// 	fmt.Println("saved updated yaml")
-	// }
+
 }

@@ -17,13 +17,13 @@ func CreateMicroservice(appName string, appPort string) error {
 	}
 	// clone template to path
 	clonePath := filepath.Join(currentDir, appName)
-	commands.ShowMessage("info", fmt.Sprintf("Cloning Template for node-express at location : %s", clonePath), true, false)
+	logging.ShowMessage("info", fmt.Sprintf("Cloning Template for node-express at location : %s", clonePath), true, false)
 	err = commands.Clone(gitUrl, clonePath)
 	if err != nil {
 		return err
 	}
 	// do npm install
-	commands.ShowMessage("info", "Initializing the nodejs project", true, false)
+	logging.ShowMessage("info", "Initializing the nodejs project", true, false)
 	err = commands.NodeInit(clonePath)
 	if err != nil {
 		return err
@@ -38,6 +38,6 @@ func CreateMicroservice(appName string, appPort string) error {
 		return err
 	}
 	os.Chdir(currentDir)
-	commands.ShowMessage("success", fmt.Sprintf("Node service %s created at %s and configured to run on port %s !", appName, clonePath, appPort), true, true)
+	logging.ShowMessage("success", fmt.Sprintf("Node service %s created at %s and configured to run on port %s !", appName, clonePath, appPort), true, true)
 	return nil
 }

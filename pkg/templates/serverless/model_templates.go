@@ -70,7 +70,7 @@ func AddServerlessTemplate(d LambdaTemplate, fileType string) error {
 		commands.GoModTidy(path)
 	}
 	if fileType == "packagejson" {
-		commands.ShowMessage("info", "Installing lambda dependencies", true, true)
+		logging.ShowMessage("info", "Installing lambda dependencies", true, true)
 		options := []string{"install"}
 		commands.ExecCommandWrapper("npm", options, path)
 	}

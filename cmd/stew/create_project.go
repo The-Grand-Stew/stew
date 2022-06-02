@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"stew/pkg/commands"
 	"stew/pkg/configs"
+	"stew/pkg/logging"
 	"stew/pkg/templates/surveys"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -27,10 +27,10 @@ var initCmd = &cobra.Command{
 func showError(err error) {
 	if err != nil {
 		if err == terminal.InterruptErr {
-			commands.ShowError("Interrupted!")
+			logging.ShowError("Interrupted!")
 			os.Exit(0)
 		}
-		commands.ShowError(err.Error())
+		logging.ShowError(err.Error())
 
 	}
 }
@@ -41,11 +41,11 @@ func runContainerBased() {
 	showError(err)
 }
 
-func runServerlessBased() {
-	// create a serverless project
-	err = createServerlessService()
-	showError(err)
-}
+// func runServerlessBased() {
+// 	// create a serverless project
+// 	err = createServerlessService()
+// 	showError(err)
+// }
 
 func createProject() error {
 	var err error
@@ -60,15 +60,15 @@ func createProject() error {
 	// change directories to projects path
 	os.Chdir(projectPath)
 
-	commands.ShowMessage("success", fmt.Sprintf("Project created at path %s! Go ahead and create your first service....", projectPath), true, true)
+	logging.ShowMessage("success", fmt.Sprintf("Project created at path %s! Go ahead and create your first service....", projectPath), true, true)
 	// ask for infra type
 	err = survey.Ask(surveys.CloudInfraTypeQuestion, &Config.InfrastructureType, survey.WithIcons(surveys.SurveyIconsConfig))
 	showError(err)
 	// change according to infra type
 	// UNCOMMENT ONCE SERVERLESS COMES IN
 	switch Config.InfrastructureType {
-	case "serverless":
-		runServerlessBased()
+	// case "serverless":
+	// 	runServerlessBased()
 	case "container-based":
 		runContainerBased()
 	}

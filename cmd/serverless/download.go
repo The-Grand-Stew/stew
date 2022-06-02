@@ -19,34 +19,34 @@ func CreateService(project string, appName string, runtime string, provider stri
 	}
 	// clone template to path
 	clonePath := filepath.Join(currentDir, appName)
-	commands.ShowMessage("info", fmt.Sprintf("Cloning Template for serverless application at location : %s", clonePath), true, true)
+	logging.ShowMessage("info", fmt.Sprintf("Cloning Template for serverless application at location : %s", clonePath), true, true)
 	err = commands.Clone(gitUrl, clonePath)
 	if err != nil {
-		commands.ShowMessage("info", fmt.Sprintf("Failed to clone repo : %s", err), true, true)
+		logging.ShowMessage("info", fmt.Sprintf("Failed to clone repo : %s", err), true, true)
 		return err
 	}
 	//do npm install
-	commands.ShowMessage("info", "Initializing the serverless project", true, true)
+	logging.ShowMessage("info", "Initializing the serverless project", true, true)
 	err = commands.NodeInit(clonePath)
 	if err != nil {
-		commands.ShowMessage("error", fmt.Sprintf("Failed to initialize repo : %s", err), true, true)
+		logging.ShowMessage("error", fmt.Sprintf("Failed to initialize repo : %s", err), true, true)
 		return err
 	}
 	options := []string{"install", "-g", "husky"}
 	command := "npm"
 	err = commands.ExecCommandWrapper(command, options, clonePath)
 	if err != nil {
-		commands.ShowMessage("error", fmt.Sprintf("Failed to install husky: %s", err), true, true)
+		logging.ShowMessage("error", fmt.Sprintf("Failed to install husky: %s", err), true, true)
 		return err
 	}
 	options = []string{"run", "prepare"}
 	command = "npm"
 	err = commands.ExecCommandWrapper(command, options, clonePath)
 	if err != nil {
-		commands.ShowMessage("error", fmt.Sprintf("Failed to add git pre-commit hooks: %s", err), true, true)
+		logging.ShowMessage("error", fmt.Sprintf("Failed to add git pre-commit hooks: %s", err), true, true)
 		return err
 	}
-	commands.ShowMessage("info", "Updating serverless variables file", true, true)
+	logging.ShowMessage("info", "Updating serverless variables file", true, true)
 
 	varFileName := filepath.Join(clonePath, "variables."+env+".yml")
 	varFilePropsTemplate := `{"runtime": "{{ .Runtime }}","environment": "{{ .Environment }}" ,"project": "{{ .Project }}" ,"app": "{{ .AppName }}","region": "{{ .Region }}" }`
@@ -68,12 +68,12 @@ func CreateService(project string, appName string, runtime string, provider stri
 
 	pluginsFileName := filepath.Join(clonePath, "resources", "plugins.yml")
 	utils.UpdateYmlArray(pluginsFileName, "plugins", "\""+pluginName+"\"")
-	commands.ShowMessage("info", "Installing required plugin", true, true)
+	logging.ShowMessage("info", "Installing required plugin", true, true)
 	command = "npm"
 	options = []string{"install", "--save-dev", pluginName}
 	err = commands.ExecCommandWrapper(command, options, clonePath)
 	if err != nil {
-		commands.ShowMessage("error", fmt.Sprintf("Failed to install plugin%s", pluginName), true, true)
+		logging.ShowMessage("error", fmt.Sprintf("Failed to install plugin%s", pluginName), true, true)
 		return err
 	}
 	return nil
