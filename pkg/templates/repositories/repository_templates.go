@@ -7,8 +7,9 @@ var MicroservicesTemplates = map[string]string{
 	"node-express-utils": "https://github.com/The-Grand-Stew/node-express-utils.git",
 	"go-fiber-postgres":  "https://gist.github.com/92e6dbf7502187d76f23e73b7133f213.git",
 	// "node-express":      "https://github.com/The-Grand-Stew/nodejs-express.git",
-	"aws-fargate":  "https://github.com/The-Grand-Stew/container-based-arch-tf.git",
-	"gcp-cloudrun": "",
+	"java-springboot": "https://github.com/The-Grand-Stew/java-spring-boot",
+	"aws-fargate":     "https://github.com/The-Grand-Stew/container-based-arch-tf.git",
+	"gcp-cloudrun":    "",
 
 	"serverless-tmpl": "https://github.com/The-Grand-Stew/serverless-code-templates.git",
 }

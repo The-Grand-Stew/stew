@@ -70,6 +70,7 @@ var (
 				Options: []string{
 					"go",
 					"node",
+					"java",
 				},
 				Default:  "go",
 				PageSize: 3,

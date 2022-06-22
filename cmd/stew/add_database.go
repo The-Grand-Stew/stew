@@ -19,6 +19,8 @@ func addDatabase(databaseTemplate string, appName string) error {
 		err = gofiber.AddPostgres()
 	case "node-express-postgres":
 		err = nodeexpress.AddPostgres()
+		// case "java-springboot-postgres":
+		// TODO
 	}
 	return err
 }

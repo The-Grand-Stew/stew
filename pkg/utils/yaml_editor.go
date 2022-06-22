@@ -7,7 +7,7 @@ import (
 
 // type Map map[string]interface{}
 
-var ExtensionMap = map[string]string{"nodejs": ".js", "go": ".go", "packagejson": ".json"}
+var ExtensionMap = map[string]string{"nodejs": ".js", "go": ".go", "java": ".java", "packagejson": ".json"}
 
 // func (m Map) M(s string) Map {
 // 	return m[s].(map[string]interface{})
