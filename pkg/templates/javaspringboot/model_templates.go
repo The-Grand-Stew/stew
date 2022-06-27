@@ -1,7 +1,5 @@
 package javaspringboot
 
-// TODO: so far I've only copied and pasted the logic. Need to properly customize it for Java
-
 import (
 	"os"
 	"strings"
@@ -22,7 +20,19 @@ type DomainTemplate struct {
 	Method       string
 }
 
-func AddSpringBootTemplate(d DomainTemplate) error {
+func fileExists(filePath string) bool {
+	if _, err := os.Stat(filePath); err == nil {
+		return true
+	}
+	return false
+}
+
+func AddSpringBootTemplate(d DomainTemplate, skipIfFileExists bool, dirPath string, fileName string) error {
+	if skipIfFileExists && fileExists(d.FilePath) {
+		return nil // do nothing
+	}
+	_ = os.MkdirAll(dirPath, os.ModePerm) // create directory
+	_, _ = os.Create(d.FilePath)          // create file
 	d.DomainName = strings.Title(d.DomainName)
 	d.AppName = strings.ToLower(d.AppName)
 	t, err := template.New("modelTemplate").Funcs(funcMap).Parse(d.TemplateName)

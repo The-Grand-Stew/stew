@@ -3,6 +3,7 @@ package stew
 import (
 	"fmt"
 	"stew/cmd/gofiber"
+	"stew/cmd/javaspringboot"
 	"stew/cmd/nodeexpress"
 	"stew/pkg/commands"
 	"stew/pkg/configs"
@@ -19,8 +20,8 @@ func addDatabase(databaseTemplate string, appName string) error {
 		err = gofiber.AddPostgres()
 	case "node-express-postgres":
 		err = nodeexpress.AddPostgres()
-		// case "java-springboot-postgres":
-		// TODO
+	case "java-springboot-postgres":
+		err = javaspringboot.AddPostgres()
 	}
 	return err
 }

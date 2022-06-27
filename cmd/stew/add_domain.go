@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"stew/cmd/gofiber"
+	"stew/cmd/javaspringboot"
 	"stew/cmd/nodeexpress"
 	"stew/pkg/commands"
 	"stew/pkg/configs"
@@ -30,8 +31,8 @@ func addDomains(app configs.AppConfig, domain string) error {
 		err = gofiber.AddModel(app.AppName, domain, app.AppPort)
 	case "node-express":
 		err = nodeexpress.AddModel(app.AppName, domain)
-		// case "java-springboot":
-		// TODO
+	case "java-springboot":
+		err = javaspringboot.AddModel(app.AppName, domain)
 	}
 	return err
 }
