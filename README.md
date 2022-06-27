@@ -28,6 +28,8 @@ brew install stew
 - Express
 ### Python
 - FastAPI (coming soon)
+### Java
+- Spring Boot
 
 ## Support Cloud Architectures:
 ### AWS

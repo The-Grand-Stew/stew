@@ -2,6 +2,7 @@ package stew
 
 import (
 	"stew/cmd/gofiber"
+	"stew/cmd/javaspringboot"
 	"stew/cmd/nodeexpress"
 	"stew/cmd/serverless"
 	"stew/pkg/configs"
@@ -43,6 +44,8 @@ func addTemplate() error {
 		err = gofiber.CreateMicroservice(App.AppName, App.AppPort)
 	case "node-express":
 		err = nodeexpress.CreateMicroservice(App.AppName, App.AppPort)
+	case "java-springboot":
+		err = javaspringboot.CreateMicroservice(App.AppName, App.AppPort)
 	}
 
 	return err
@@ -78,6 +81,8 @@ func createBaseService(isContainerBased bool) error {
 			template = surveys.GoQuestions
 		case "node":
 			template = surveys.NodeQuestions
+		case "java":
+			template = surveys.JavaQuestions
 		}
 
 		// 5: Select Framework
