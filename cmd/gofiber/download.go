@@ -14,6 +14,10 @@ func CreateMicroservice(appName, appPort string) error {
 	if err != nil {
 		return err
 	}
+	err = commands.SearchAndDeleteKeepFiles(appPath)
+	if err != nil {
+		return err
+	}
 	// do go mod init
 	commands.ShowMessage("info", "Initialising a go mod init...", true, false)
 	err = commands.GoModInit(appPath, appName)

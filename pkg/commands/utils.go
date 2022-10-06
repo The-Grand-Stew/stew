@@ -2,6 +2,8 @@ package commands
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/mattn/go-colorable"
@@ -79,4 +81,33 @@ func colorizeLevel(level string) string {
 
 	// Send common or colored caption.
 	return fmt.Sprintf("%s%s%s", color, icon, color)
+}
+
+func SearchAndDeleteKeepFiles(rootPath string) error {
+
+	var files []string
+
+	err := filepath.Walk(rootPath, func(
+		path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && filepath.Base(path) == ".keep" {
+			files = append(files, path)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		err = os.Remove(file)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
