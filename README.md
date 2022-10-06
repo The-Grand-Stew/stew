@@ -36,6 +36,6 @@ brew install stew
 - Cloudrun (Coming soon)
 
 ## Contacts:
-- Vedashree Patil   vedapatil@deloitte.nl
-- Aashrit Shankar   aasshankar@deloitte.nl
-- Arun Kutty        arkutty@deloitte.nl
+- Vedashree Patil   
+- Aashrit Shankar   
+- Arun Kutty        
